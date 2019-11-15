@@ -9,7 +9,8 @@ class User:
         self.watcher=watcher
         self.owned_items={}
         self.enable = False
-        
+        self.sold_items={}
+        self.items_on_sale={}
 
 
     def verify(self,email,verification_number):
@@ -71,12 +72,20 @@ class User:
     
 
     def report(self):
-        print(1)
+        return {
+            'sold_items':self.sold_items,
+            'items_on_sale':self.items_on_sale # financial info should be added as well but how?
+        }
 
 
     def get_balance(self):
         return self.balance
 
+
+    """
+        what the fuck is this you mathafucka? have you heard of comments?
+        now you heard at least.
+    """
     def get_reserved(self):
         return self.reserved
     
