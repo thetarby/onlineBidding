@@ -8,12 +8,13 @@ class User:
         self.balance=10 # yeni üyeye kıyak 10 tl kanka
         self.watcher=watcher
         self.owned_items={}
+        self.enable = False
 
     def verify(self,email,verification_number):
         email_form = '^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$'
         if re.match(email_form, email) != None:
             if verification_number == self.password:
-                print('User is verified.')
+                self.enable = True
             else:
                 raise ValueError('Wrong password')
         else:
@@ -27,9 +28,25 @@ class User:
                 print('error')
         else:
             self.password=new_password
+        # kardo adam eski sifreyi vermezse direkt sifresini degistiriyoz boyle sacma degil mi?
 
     def list_items(self, item_type=None, state='all'):
-        return 1 
+        items = []
+        
+        if item_type == None:   # list all item types
+            if state == 'all':
+                for itype in self.owned_items:
+                    items += self.owned_items[itype]
+            else:
+                for itype in self.owned_items:
+                    items += filter(lambda x: x.get_state() == state, self.owned_items[itype])
+        else:
+            if state == 'all':
+                items += self.owned_items[item_type]
+            else:
+                items += filter(lambda x: x.get_state() == state, self.owned_items[item_type])
+        
+        return items
 
     def watch(self,watch_method,item_type=None):
         self.watcher.register(self, watch_method,item_type)

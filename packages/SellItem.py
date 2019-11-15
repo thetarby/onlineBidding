@@ -11,6 +11,7 @@ class SellItem:
         self.watcher=watcher
         self.highest_payer=None
         self.amount=minbid
+        self.state = 'active'
 
 
     def start_auction(self, topbid=None):
@@ -36,3 +37,9 @@ class SellItem:
 
     def history(self):    
         print(1)
+
+    def get_item_type(self):
+        return self.item_type
+    
+    def get_state(self):
+        return self.state
