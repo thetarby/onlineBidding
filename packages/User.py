@@ -1,4 +1,5 @@
 import re
+import random
 
 class User:
     def __init__(self,email,name_surname,password,watcher):
@@ -16,6 +17,7 @@ class User:
             'income': []
             }
         self.reserved = 0
+        self.verification_number = password # we set it to password for test purposes
 
 
     def verify(self,email,verification_number):
