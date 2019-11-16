@@ -3,7 +3,7 @@ import re
 class User:
     def __init__(self,email,name_surname,password,watcher):
         self.email=email
-        self.name_surmane=name_surname
+        self.name_surname=name_surname
         self.password=password
         self.balance=0
         self.watcher=watcher
