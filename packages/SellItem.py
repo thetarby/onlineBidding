@@ -36,6 +36,7 @@ class SellItem:
             self.state = 'onhold'
             self.history['start_price'] = amount
 
+        
         self.highest_payer = user
         self.history['bid_history'].append((self.last_bid,user))
         self.last_bid = amount
@@ -54,6 +55,8 @@ class SellItem:
         self.state = 'sold'
         self.history['selling_price']=self.last_bid
         self.watcher.notify(self)
+
+        self.owner.item_sold(self)
 
     
     def view(self):
@@ -77,6 +80,6 @@ class SellItem:
     def get_item_type(self):
         return self.item_type
     
-    
+
     def get_state(self):
         return self.state

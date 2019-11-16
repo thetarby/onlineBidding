@@ -5,12 +5,13 @@ class User:
         self.email=email
         self.name_surmane=name_surname
         self.password=password
-        self.balance=10 # yeni üyeye kıyak 10 tl kanka
+        self.balance=0
         self.watcher=watcher
         self.owned_items={}
         self.enable = False
         self.sold_items={}
         self.items_on_sale={}
+        self.reserved = 0
 
 
     def verify(self,email,verification_number):
@@ -66,6 +67,7 @@ class User:
             raise ValueError('Not enough money')
 
         self.balance -= price
+        self.reserved -= price
         if(item_type not in self.owned_items):
             self.owned_items[item_type]=[]
         self.owned_items[item_type].append(item)
@@ -90,3 +92,6 @@ class User:
     def get_reserved(self):
         return self.reserved
     
+
+    def take_bid_back(self, bid_amount):
+        self.reserved -= bid_amount
