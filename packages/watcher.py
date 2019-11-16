@@ -1,14 +1,28 @@
 class Watcher:
     def __init__(self):
+        """
+        observers:
+            {
+                'car':[(user, method),(user,method)],
+                'phone':[(user, method),(user,method)],
+            }
+        """
         self.observers={}
         self.item_watchers={}
 
     def register(self,user,watch_method,item_type):
         if(item_type in self.observers):
-            self.observers[item_type].append((user, watch_method))   
+            temp=[1 for user_method_pair in self.observers[item_type] if user_method_pair[0]==user]
+            if(len(temp)): # if user is watching the same item type with same method do not register
+                print('user already watching the item with the same method')
+                return 0
+            else:
+                self.observers[item_type].append((user, watch_method))
+                return 1   
         else:
             self.observers[item_type]=[]
             self.observers[item_type].append((user, watch_method))
+            return 1
 
 
     def item_watcher_register(self,item,user,watch_method):

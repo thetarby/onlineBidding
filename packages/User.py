@@ -54,7 +54,7 @@ class User:
 
 
     def watch(self,watch_method,item_type=None):
-        self.watcher.register(self, watch_method,item_type)
+        return self.watcher.register(self, watch_method,item_type)
 
 
     def add_balance(self,amount):
