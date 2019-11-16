@@ -29,7 +29,7 @@ class User:
             if(old_password==self.password):
                 self.password=new_password
             else:
-                print('error')
+                raise ValueError('Old password is not correct.')
         else:
             self.password=new_password
 
@@ -85,6 +85,7 @@ class User:
     """
         what the fuck is this you mathafucka? have you heard of comments?
         now you heard at least.
+
     """
     def get_reserved(self):
         return self.reserved

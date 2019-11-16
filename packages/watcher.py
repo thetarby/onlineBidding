@@ -12,6 +12,7 @@ class Watcher:
 
 
     def item_watcher_register(self,item,user,watch_method):
+        # niye title'a gore bakiyoruz ki direkt item var mi yok mu diye bakmayacaz mi?
         if(item.title in self.item_watchers): # there may be mistake since two items could have same title
             self.item_watchers[item].append((item,watch_method))
         else:
