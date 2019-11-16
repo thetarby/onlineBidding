@@ -12,16 +12,16 @@ class SellItem:
         self.highest_payer=None
         self.last_bid=minbid
         self.state = 'active'
-        self.history={
+        self.history_={
             'start_price':self.minbid, # minbid mi başlangıç fiyatı emin olamadım?????,
             'selling_price':0,
             'bid_history':[] # a list of pairs which is (amount,user_who_paid_it)
         }
+        owner.financial_report['items_on_sale'].append(self)
 
 
     def start_auction(self, stopbid=None):
         self.watcher.notify(self.item_type)
-        self.state = 'onhold'
         self.watcher.notify(self)
 
     
@@ -37,13 +37,13 @@ class SellItem:
             return
         if self.state == 'active':
             self.state = 'onhold'
-            self.history['start_price'] = amount
+            self.history_['start_price'] = amount
 
         old_user=self.highest_payer
         old_user.take_bid_back(self.last_bid)
         
         self.highest_payer = user
-        self.history['bid_history'].append((self.last_bid,user))
+        self.history_['bid_history'].append((self.last_bid,user))
         self.last_bid = amount
         user.reserve(amount)
 
@@ -60,7 +60,7 @@ class SellItem:
     def sell(self):
         self.highest_payer.buy(self.item_type,self.last_bid)
         self.state = 'sold'
-        self.history['selling_price']=self.last_bid
+        self.history_['selling_price']=self.last_bid
         self.watcher.notify(self)
 
         self.owner.item_sold(self)
@@ -74,6 +74,7 @@ class SellItem:
         print('bidtype: ', self.bidtype)
         print('starting: ', self.starting)
         print('minbid: ', self.minbid)
+        print('auction data: ', self.history_)
 
 
     def watch(self, user,method):
@@ -81,7 +82,7 @@ class SellItem:
 
 
     def history(self):    
-        return self.history
+        return self.history_
 
 
     def get_item_type(self):
