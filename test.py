@@ -21,6 +21,12 @@ try:
 except:
     raise ValueError('error while creating user instances')    
 
+print('a user with invalid e-mail is trying to be created, should be rejected')
+user4=User('asgmail.com', 'at akyol', '123abc123', watcher)
+user4.verify('123abc123')
+if(user4.enable):
+    raise ValueError('user with invalid e-mail should not have been created')
+
 print(user1.name_surname+' is created')
 print(user2.name_surname+' is created')
 print(user3.name_surname+' is created')
@@ -123,22 +129,38 @@ user1.add_balance(10)#20
 user2.add_balance(50)#60
 
 sellitem1.bid(user1,10)
-10==user1.balance-user1.reserved
+if(10==user1.balance-user1.reserved):
+    pass
+else:
+    raise ValueError('reserve is wrong')
 
 
 #should be rejected since it is lower than last bid
-sellitem1.bid(user2,8)
-60==user2.balance-user2.reserved
+x=sellitem1.bid(user2,8)
+if(x==0): pass
+else: raise ValueError('bid should have been rejected')
 
+if(60==user2.balance-user2.reserved):
+     pass
+else:
+    raise ValueError('reserve is wrong')   
 
 sellitem1.bid(user2,15)
-5==user2.balance-user2.reserved
-
+if(45==user2.balance-user2.reserved):
+    pass
+else:
+    raise ValueError('reserve is wrong')
 
 #should be rejected since user1 does not have that much money
-sellitem1(user1, 30)
-20==user1.balance-user1.reserved
+x=sellitem1.bid(user1, 30)
+if(x==0): pass
+else: raise ValueError('bid should have been rejected')
 
+
+if(20==user1.balance-user1.reserved):
+    pass
+else:
+    raise ValueError('reserve is wrong')
 
 """
     -------------------------END OF TEST FOR WATCH METHODS-----------------------------

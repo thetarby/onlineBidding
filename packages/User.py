@@ -5,7 +5,7 @@ class User:
         self.email=email
         self.name_surname=name_surname
         self.password=password
-        self.balance=0
+        self.balance=10 #yeni üyeye kıyak kanka
         self.watcher=watcher
         self.owned_items={}
         self.enable = False
@@ -18,13 +18,13 @@ class User:
         self.reserved = 0
 
 
-    def verify(self,email,verification_number):
+    def verify(self,verification_number):
         email_form = '^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$'
-        if re.match(email_form, email) != None:
-            if verification_number == self.password:
+        if re.match(email_form, self.email) != None:
+            if verification_number == self.verification_number:
                 self.enable = True
             else:
-                raise ValueError('Wrong password')
+                raise ValueError('Wrong verification number')
         else:
             raise ValueError('Enter a valid email address')          
 
@@ -89,6 +89,13 @@ class User:
     def get_reserved(self):
         return self.reserved
     
+    def reserve(self,amount):
+        if(amount<=self.balance-self.reserved):
+            self.reserved+=amount
+            return 1
+        else:
+            return 0        
+
 
     def take_bid_back(self, bid_amount):
         self.reserved -= bid_amount

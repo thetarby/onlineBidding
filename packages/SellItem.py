@@ -28,19 +28,19 @@ class SellItem:
     def bid(self, user, amount):
         if amount <= self.last_bid:
             print('Amount should be more than the last bid')
-            return
+            return 0
         if self.state == 'sold':
             print('Auction is not active')
-            return
+            return 0
         if user.get_balance() - user.get_reserved() < amount:
             print('Cannot bid that much amount')
-            return
+            return 0
         if self.state == 'active':
             self.state = 'onhold'
             self.history_['start_price'] = amount
 
         old_user=self.highest_payer
-        old_user.take_bid_back(self.last_bid)
+        if(old_user is not None): old_user.take_bid_back(self.last_bid)
         
         self.highest_payer = user
         self.history_['bid_history'].append((self.last_bid,user))
@@ -49,7 +49,7 @@ class SellItem:
 
         #item state'i değiştiği içiin izleyenleri notify et
         self.watcher.notify(self)
-
+        return 1
 
     """
     burda ownerı bilgilendirmemiz lazım senin itemin satıldı diye
