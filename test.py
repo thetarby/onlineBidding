@@ -6,6 +6,7 @@ from packages.watcher import *
 """
     -------------------------TEST FOR CONSTRUCTORS-----------------------------
 """
+print('TEST FOR CONSTRUCTORS')
 print('Watcher will be created')
 try:
     watcher=Watcher()
@@ -26,7 +27,6 @@ user4=User('asgmail.com', 'at akyol', '123abc123', watcher)
 user4.verify('123abc123')
 if(user4.enable):
     raise ValueError('user with invalid e-mail should not have been created')
-
 print(user1.name_surname+' is created')
 print(user2.name_surname+' is created')
 print(user3.name_surname+' is created')
@@ -34,11 +34,15 @@ print(user3.name_surname+' is created')
 
 print('SellItems will be created')
 try:
-    sellitem1=SellItem(user1, 'iphone x', 'telefon','desc','bidtype', 'starting',watcher)
-    sellitem2=SellItem(user1, 'iphone 5s', 'telefon', 'desc','bidtype','starting',watcher)
-    sellitem3=SellItem(user1, 'mercedes c coupe 2 kapılı', 'car', 'desc','bidtype','starting',watcher)
+    sellitem1=SellItem(user3, 'iphone x', 'telefon','desc','bidtype', 'starting',watcher)
+    sellitem2=SellItem(user3, 'iphone 5s', 'telefon', 'desc','bidtype','starting',watcher)
+    sellitem3=SellItem(user3, 'mercedes c coupe 2 kapılı', 'car', 'desc','bidtype','starting',watcher)
 except:
     raise ValueError('error while creating user instances')
+
+print(sellitem1.title+' is created')
+print(sellitem2.title+' is created')
+print(sellitem3.title+' is created')
 
 """
     -------------------------END OF TEST FOR CONSTRUCTORS-----------------------------
@@ -50,7 +54,7 @@ except:
 """
     -------------------------TEST FOR WATCH METHODS-----------------------------
 """
-
+print('\n\n\n\n\n\nTEST FOR WATCH METHODS')
 """
     This method is to be called with user1 when a telefon item is on sale
     If it is called with another user who is not watching telefon items
@@ -125,6 +129,7 @@ except:
 """
     -------------------------TEST FOR SELLITEM-----------------------------
 """
+print('\n\n\n\n\n\nTEST FOR SELLITEM')
 user1.add_balance(10)#20 
 user2.add_balance(50)#60
 
@@ -162,6 +167,10 @@ if(20==user1.balance-user1.reserved):
 else:
     raise ValueError('reserve is wrong')
 
+sellitem1.sell()
+print(sellitem1.history())
+print(user2.report())
+print(user3.report())
 """
     -------------------------END OF TEST FOR WATCH METHODS-----------------------------
 """

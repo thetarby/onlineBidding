@@ -26,9 +26,9 @@ class User:
             if verification_number == self.verification_number:
                 self.enable = True
             else:
-                raise ValueError('Wrong verification number')
+                print('Wrong verification number')
         else:
-            raise ValueError('Enter a valid email address')          
+            print('Enter a valid email address')          
 
 
     def change_password(self,new_password,old_password=None):

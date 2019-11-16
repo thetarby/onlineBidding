@@ -58,12 +58,12 @@ class SellItem:
     işimize yarıcak gibi genel olarak.
     """     
     def sell(self):
-        self.highest_payer.buy(self.item_type,self.last_bid)
+        self.highest_payer.buy(self,self.item_type,self.last_bid)
         self.state = 'sold'
         self.history_['selling_price']=self.last_bid
         self.watcher.notify(self)
-
         self.owner.item_sold(self)
+
 
     
     def view(self):
