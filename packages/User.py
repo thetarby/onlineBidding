@@ -5,12 +5,17 @@ class User:
         self.email=email
         self.name_surname=name_surname
         self.password=password
-        self.balance=10 # yeni üyeye kıyak 10 tl kanka
+        self.balance=0
         self.watcher=watcher
         self.owned_items={}
         self.enable = False
-        self.sold_items={}
-        self.items_on_sale={}
+        self.financial_report = {
+            'items_sold': [],
+            'items_on_sale': [],
+            'expenses': [],
+            'income': []
+            }
+        self.reserved = 0
 
 
     def verify(self,email,verification_number):
@@ -66,28 +71,30 @@ class User:
             raise ValueError('Not enough money')
 
         self.balance -= price
+        self.reserved -= price
         if(item_type not in self.owned_items):
             self.owned_items[item_type]=[]
         self.owned_items[item_type].append(item)
+        self.financial_report['expenses'].append((item, price))
     
 
     def report(self):
-        return {
-            'sold_items':self.sold_items,
-            'items_on_sale':self.items_on_sale # financial info should be added as well but how?
-        }
+        return self.financial_report
 
 
     def get_balance(self):
         return self.balance
 
 
-    """
-        what the fuck is this you mathafucka? have you heard of comments?
-        now you heard at least.
-
-    """
     def get_reserved(self):
         return self.reserved
     
+
+    def take_bid_back(self, bid_amount):
+        self.reserved -= bid_amount
+
     
+    def item_sold(self, item):
+        self.financial_report['items_sold'].append(item)
+        self.financial_report['items_on_sale'].remove(item)
+        self.financial_report['income'].append((item, item.history_['selling_price']))
