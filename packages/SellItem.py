@@ -1,5 +1,5 @@
 class SellItem:
-    def __init__(self,owner,title,item_type,decsription,bidtype,starting,minbid=1.0,watcher,image=None):
+    def __init__(self,owner,title,item_type,decsription,bidtype,starting,watcher,minbid=1.0,image=None):
         self.owner=owner
         self.title=title
         self.item_type=item_type
@@ -27,19 +27,27 @@ class SellItem:
     
     def bid(self, user, amount):
         if amount <= self.last_bid:
-            raise ValueError('Amount should be more than the last bid')
+            print('Amount should be more than the last bid')
+            return
         if self.state == 'sold':
-            raise ValueError('Auction is not active')
+            print('Auction is not active')
+            return
         if user.get_balance() - user.get_reserved() < amount:
-            raise ValueError('Cannot bid that much amount')
+            print('Cannot bid that much amount')
+            return
         if self.state == 'active':
             self.state = 'onhold'
             self.history['start_price'] = amount
 
+        old_user=self.highest_payer
+        old_user.take_bid_back(self.last_bid)
+        
         self.highest_payer = user
         self.history['bid_history'].append((self.last_bid,user))
         self.last_bid = amount
-        user.reserve(amount) # verdigi miktar kadarini reserve etmesi lazim item satildiginda balance'dan duscez
+        user.reserve(amount)
+
+        #item state'i değiştiği içiin izleyenleri notify et
         self.watcher.notify(self)
 
 

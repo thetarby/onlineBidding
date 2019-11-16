@@ -3,7 +3,7 @@ import re
 class User:
     def __init__(self,email,name_surname,password,watcher):
         self.email=email
-        self.name_surmane=name_surname
+        self.name_surname=name_surname
         self.password=password
         self.balance=10 # yeni üyeye kıyak 10 tl kanka
         self.watcher=watcher
@@ -89,4 +89,5 @@ class User:
     """
     def get_reserved(self):
         return self.reserved
+    
     
