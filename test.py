@@ -31,7 +31,7 @@ print('a user with invalid e-mail is trying to be created, should be rejected')
 user4=User('wrongMail', 'john doe', '123abc123', watcher)
 user4.verify('123abc123')
 if(user4.enable):
-    raise ValueError('user with invalid e-mail should not have been created\n')
+    raise ValueError('user with invalid e-mail should not have been created')
 
 print('SellItems will be created')
 try:
