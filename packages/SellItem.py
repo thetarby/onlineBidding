@@ -52,7 +52,7 @@ class SellItem:
         self.last_bid = amount
         user.reserve(amount)
         if amount >= self.stopbid:
-            user.buy(self, self.item_type, amount)
+            self.sell()
         #item state'i değiştiği içiin izleyenleri notify et
         self.watcher.notify(self)
         return 1
@@ -71,7 +71,6 @@ class SellItem:
         self.owner.item_sold(self)
 
 
-    
     def view(self):
         print('owner: ', self.owner)
         print('title: ', self.title)

@@ -104,14 +104,14 @@ except:
 
 print('a phone item will be on sale')
 try:
-    sellitem1.start_auction()
+    sellitem1.start_auction(15)
 except:
     raise ValueError('error while starting auction')
 
 
 print('a car item will be on sale')
 try:
-    sellitem3.start_auction()
+    sellitem3.start_auction(56)
 except:
     raise ValueError('error while starting auction')
 
@@ -151,11 +151,6 @@ if(60==user2.balance-user2.reserved):
 else:
     raise ValueError('reserve is wrong')   
 
-sellitem1.bid(user2,15)
-if(45==user2.balance-user2.reserved):
-    pass
-else:
-    raise ValueError('reserve is wrong')
 
 #should be rejected since user1 does not have that much money
 x=sellitem1.bid(user1, 30)
@@ -163,17 +158,64 @@ if(x==0): pass
 else: raise ValueError('bid should have been rejected')
 
 
-if(20==user1.balance-user1.reserved):
+#item should be sold since stop bid is reached
+sellitem1.bid(user2,15)
+if(45==user2.balance-user2.reserved):
     pass
 else:
     raise ValueError('reserve is wrong')
 
-sellitem1.sell()
+
+
+if(20==user1.balance-user1.reserved):
+    pass
+else:
+    raise ValueError('reserve is wrong')
+"""
+    -------------------------END OF TEST FOR SELLITEM-----------------------------
+"""
+
+
+
+"""
+    -------------------------TEST FOR REPORT AND HISTORY-----------------------------
+"""
 print(sellitem1.history())
 print(user2.report())
 print(user3.report())
+
+print('\nchecking reports if they are succesful...')
+if(user3.report()['items_sold'][0]==sellitem1 and \
+   user3.report()['items_on_sale'][0]==sellitem2 and \
+   user3.report()['items_on_sale'][1]==sellitem3):
+    pass
+else:
+    raise ValueError('user3 report is wrong')
+
+if(user2.report()['expenses'][0]==(sellitem1,15)):
+    pass
+else:
+    raise ValueError('user1 report is wrong')        
+
+
+
+if(sellitem1.history()['start_price']==10):
+    pass
+else:
+    raise ValueError('sellitem history is wrong')
+
+if(sellitem1.history()['selling_price']==15):
+    pass
+else:
+    raise ValueError('sellitem history is wrong')
+
+if(sellitem1.history()['bid_history'][0]==(1.0,user1)):
+    pass
+else:
+    raise ValueError('sellitem history is wrong')
+
 """
-    -------------------------END OF TEST FOR WATCH METHODS-----------------------------
+    -------------------------END OF TEST FOR REPORT AND HISTORY-----------------------------
 """
 
 
