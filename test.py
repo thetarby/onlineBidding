@@ -1,7 +1,7 @@
 from packages.SellItem import *
 from packages.User import *
 from packages.watcher import *
-
+import time
 
 """
     -------------------------TEST FOR CONSTRUCTORS-----------------------------
@@ -103,7 +103,7 @@ except:
 
 print('a phone item will be on sale')
 try:
-    sellitem1.start_auction()
+    sellitem1.start_auction(5)
 except:
     raise ValueError('error while starting auction')
 
@@ -150,9 +150,10 @@ if(60==user2.balance-user2.reserved):
 else:
     raise ValueError('reserve is wrong')   
 
+time.sleep(3)
 sellitem1.bid(user2,15)
 if(45==user2.balance-user2.reserved):
-    pass
+    print('last bid is done after 5 seconds item should be sold')
 else:
     raise ValueError('reserve is wrong')
 
@@ -167,7 +168,8 @@ if(20==user1.balance-user1.reserved):
 else:
     raise ValueError('reserve is wrong')
 
-sellitem1.sell()
+while(sellitem1.state!='sold'):
+    pass
 print(sellitem1.history())
 print(user2.report())
 print(user3.report())

@@ -1,3 +1,5 @@
+import time, threading
+
 class SellItem:
     def __init__(self,owner,title,item_type,decsription,bidtype,starting,watcher,minbid=1.0,image=None):
         self.owner=owner
@@ -19,11 +21,17 @@ class SellItem:
         }
         owner.financial_report['items_on_sale'].append(self)
 
+    def _start_timer(self,stopbid):
+        if(stopbid is not None):
+            self.timer=threading.Timer(stopbid, self.sell)
+            self.timer.start()
+
 
     def start_auction(self, stopbid=None):
         self.watcher.notify(self.item_type)
         self.watcher.notify(self)
-
+        self.stopbid=stopbid
+        self._start_timer(stopbid)  
     
     def bid(self, user, amount):
         if amount <= self.last_bid:
@@ -47,6 +55,10 @@ class SellItem:
         self.last_bid = amount
         user.reserve(amount)
 
+        #reset timer
+        if(self.stopbid is not None):
+            self.timer.cancel()
+            self._start_timer(self.stopbid)
         #item state'i değiştiği içiin izleyenleri notify et
         self.watcher.notify(self)
         return 1
