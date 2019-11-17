@@ -17,12 +17,17 @@ class SellItem:
             'selling_price':0,
             'bid_history':[] # a list of pairs which is (amount,user_who_paid_it)
         }
+        self.stopbid = 0
         owner.financial_report['items_on_sale'].append(self)
 
 
     def start_auction(self, stopbid=None):
         self.watcher.notify(self.item_type)
         self.watcher.notify(self)
+        if stopbid is not None:
+            self.stopbid = stopbid
+        else:
+            print('stopbid is not defined')
 
     
     def bid(self, user, amount):
@@ -46,7 +51,8 @@ class SellItem:
         self.history_['bid_history'].append((self.last_bid,user))
         self.last_bid = amount
         user.reserve(amount)
-
+        if amount >= self.stopbid:
+            user.buy(self, self.item_type, amount)
         #item state'i değiştiği içiin izleyenleri notify et
         self.watcher.notify(self)
         return 1
