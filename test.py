@@ -11,38 +11,39 @@ print('Watcher will be created')
 try:
     watcher=Watcher()
 except:
-    raise ValueError('error while creating watcher instance')    
+    raise ValueError('error while creating watcher instance')  
 
+print('Watcher has been created\n')
 
 print('users will be created')
 try:
-    user1=User('asd@gmail.com', 'furkan akyol', '123abc123', watcher)
-    user2=User('ass@gmail.com', 'azad', '123abc123', watcher)
-    user3=User('asc@gmail.com', 'yusuf', '123abc123', watcher)
-except:
-    raise ValueError('error while creating user instances')    
-
-print('a user with invalid e-mail is trying to be created, should be rejected')
-user4=User('asgmail.com', 'at akyol', '123abc123', watcher)
-user4.verify('123abc123')
-if(user4.enable):
-    raise ValueError('user with invalid e-mail should not have been created')
-print(user1.name_surname+' is created')
-print(user2.name_surname+' is created')
-print(user3.name_surname+' is created')
-
-
-print('SellItems will be created')
-try:
-    sellitem1=SellItem(user3, 'iphone x', 'telefon','desc','bidtype', 'starting',watcher)
-    sellitem2=SellItem(user3, 'iphone 5s', 'telefon', 'desc','bidtype','starting',watcher)
-    sellitem3=SellItem(user3, 'mercedes c coupe 2 kapılı', 'car', 'desc','bidtype','starting',watcher)
+    user1=User('furkan@gmail.com', 'furkan akyol', '123abc123', watcher)
+    user2=User('azad@gmail.com', 'azad', '123abc123', watcher)
+    user3=User('yusuf@gmail.com', 'yusuf', '123abc123', watcher)
 except:
     raise ValueError('error while creating user instances')
 
-print(sellitem1.title+' is created')
-print(sellitem2.title+' is created')
-print(sellitem3.title+' is created')
+print(user1.name_surname+' has been created')
+print(user2.name_surname+' has been created')
+print(user3.name_surname+' has been created\n')
+
+print('a user with invalid e-mail is trying to be created, should be rejected')
+user4=User('wrongMail', 'john doe', '123abc123', watcher)
+user4.verify('123abc123')
+if(user4.enable):
+    raise ValueError('user with invalid e-mail should not have been created\n')
+
+print('SellItems will be created')
+try:
+    sellitem1=SellItem(user3, 'iphone x', 'phone','desc','increment', 'starting',watcher)
+    sellitem2=SellItem(user3, 'iphone 5s', 'phone', 'desc','decrement','starting',watcher)
+    sellitem3=SellItem(user3, 'mercedes c coupe', 'car', 'desc','instantincrement','starting',watcher)
+except:
+    raise ValueError('error while creating sellItems')
+
+print(sellitem1.title+' has been created')
+print(sellitem2.title+' has been created')
+print(sellitem3.title+' has been created\n')
 
 """
     -------------------------END OF TEST FOR CONSTRUCTORS-----------------------------
@@ -88,7 +89,7 @@ print('user3 will watch car items')
 try:
     user3.watch(lambda :g(user3), 'car')
 except:
-    raise ValueError('error while calling watch method of user class')
+    raise ValueError('error while calling watch method of user class\n')
 
 print('user3 will watch car items again it should be rejected and None returned')
 try:
