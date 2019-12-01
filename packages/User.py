@@ -1,13 +1,14 @@
 import re
 import random
+from packages.Watcher import Watcher
 
 class User:
-    def __init__(self,email,name_surname,password,watcher):
+    def __init__(self,email,name_surname,password):
         self.email=email
         self.name_surname=name_surname
         self.password=password
         self.balance=10 #yeni üyeye kıyak kanka
-        self.watcher=watcher
+        self.watcher=Watcher()
         self.owned_items={}
         self.enable = False
         self.financial_report = {
@@ -91,6 +92,7 @@ class User:
     def get_reserved(self):
         return self.reserved
     
+    
     def reserve(self,amount):
         if(amount<=self.balance-self.reserved):
             self.reserved+=amount
@@ -107,3 +109,4 @@ class User:
         self.financial_report['items_sold'].append(item)
         self.financial_report['items_on_sale'].remove(item)
         self.financial_report['income'].append((item, item.history_['selling_price']))
+    

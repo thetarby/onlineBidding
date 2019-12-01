@@ -1,5 +1,9 @@
+from packages.Watcher import Watcher
+import threading
+
+
 class SellItem:
-    def __init__(self,owner,title,item_type,decsription,bidtype,starting,watcher,minbid=1.0,image=None):
+    def __init__(self,owner,title,item_type,decsription,bidtype,starting,minbid=1.0,image=None):
         self.owner=owner
         self.title=title
         self.item_type=item_type
@@ -8,7 +12,7 @@ class SellItem:
         self.starting=starting
         self.minbid=minbid
         self.image=image
-        self.watcher=watcher
+        self.watcher=Watcher()
         self.highest_payer=None
         self.last_bid=minbid
         self.state = 'active'
@@ -21,16 +25,71 @@ class SellItem:
         owner.financial_report['items_on_sale'].append(self)
 
 
+    def _start_timer(self,period,callback):
+        self.timer=threading.Timer(period, callback)
+        self.timer.start()
+
+
+    def _decrement_handler(self):
+        self.current_price-=self.delta # TODO: check if it is less than zero
+        if(self.current_price==self.stop_decrement):
+            self.sell() # TODO: there might not be any customer check that case.
+            return 1
+        else:
+            self._start_timer(self.bidtype[1], self._decrement_handler)
+            return 0
+
+
+    # TODO: eğer adam en çok teklif edenden daha az verirse yine de bid kabul edilcek mi?
+    def _instant_increment_handler(self,user,amount):
+        if self.state == 'sold':
+            print('Auction is not active')
+            return 0
+        if user.get_balance() - user.get_reserved() < amount:
+            print('Cannot bid that much amount')
+            return 0
+        if self.bidded_users[self.highest_payer]<=(self.bidded_users[user]+amount):
+            print('you should bid more')
+            return 0
+        if(amount<self.bidtype[1]):
+            print('bid is less than mindelta')
+            return 0
+        if self.state == 'active':
+            self.state = 'onhold'
+            self.history_['start_price'] = amount
+
+
+        old_user=self.highest_payer
+        self.highest_payer = user
+        self.history_['bid_history'].append((amount,user))
+        self.bidded_users[user]+=amount
+        self.last_bid=self.bidded_users[user]
+        self.total_bid+=amount
+        user.reserve(amount)    
+
+        #auto sell is reached
+        if(self.total_bid>=self.bidtype[2]):
+            self.sell() 
+        
+        return 1
+
     def start_auction(self, stopbid=None):
         self.watcher.notify(self.item_type)
         self.watcher.notify(self)
-        if stopbid is not None:
-            self.stopbid = stopbid
-        else:
-            print('stopbid is not defined')
+        if(self.bidtype[0]=='increment'): # TODO: add min delta functionality
+            if stopbid is not None:
+                self.stopbid = stopbid
+            else:
+                print('stopbid is not defined')
+        elif(self.bidtype[0]=='decrement'):
+            self._start_timer(self.bidtype[1], self._decrement_handler)
+        elif(self.bidtype[0]=='instant increment'):
+            pass
 
     
-    def bid(self, user, amount):
+    def bid(self, user, amount):# TODO: check starting price for the first bid
+        if(self.bidtype=='instant increment'):
+            return self._instant_increment_handler(user,amount)
         if amount <= self.last_bid:
             print('Amount should be more than the last bid')
             return 0
@@ -64,6 +123,9 @@ class SellItem:
     işimize yarıcak gibi genel olarak.
     """     
     def sell(self):
+        if(self.bidtype[0]=='instant increment'): # if it is intant increment get money of all users
+            for user,bid in self.bidded_users.keys():
+                user.reserved-=bid
         self.highest_payer.buy(self,self.item_type,self.last_bid)
         self.state = 'sold'
         self.history_['selling_price']=self.last_bid
@@ -96,3 +158,4 @@ class SellItem:
 
     def get_state(self):
         return self.state
+

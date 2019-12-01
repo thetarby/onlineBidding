@@ -1,25 +1,19 @@
 from packages.SellItem import *
 from packages.User import *
-from packages.watcher import *
+from packages.Watcher import *
 
 
 """
     -------------------------TEST FOR CONSTRUCTORS-----------------------------
 """
 print('TEST FOR CONSTRUCTORS')
-print('Watcher will be created')
-try:
-    watcher=Watcher()
-except:
-    raise ValueError('error while creating watcher instance')  
 
-print('Watcher has been created\n')
 
 print('users will be created')
 try:
-    user1=User('furkan@gmail.com', 'furkan akyol', '123abc123', watcher)
-    user2=User('azad@gmail.com', 'azad', '123abc123', watcher)
-    user3=User('yusuf@gmail.com', 'yusuf', '123abc123', watcher)
+    user1=User('furkan@gmail.com', 'furkan akyol', '123abc123')
+    user2=User('azad@gmail.com', 'azad', '123abc123')
+    user3=User('yusuf@gmail.com', 'yusuf', '123abc123')
 except:
     raise ValueError('error while creating user instances')
 
@@ -28,16 +22,16 @@ print(user2.name_surname+' has been created')
 print(user3.name_surname+' has been created\n')
 
 print('a user with invalid e-mail is trying to be created, should be rejected')
-user4=User('wrongMail', 'john doe', '123abc123', watcher)
+user4=User('wrongMail', 'john doe', '123abc123')
 user4.verify('123abc123')
 if(user4.enable):
     raise ValueError('user with invalid e-mail should not have been created')
 
 print('SellItems will be created')
 try:
-    sellitem1=SellItem(user3, 'iphone x', 'phone','desc','increment', 'starting',watcher)
-    sellitem2=SellItem(user3, 'iphone 5s', 'phone', 'desc','decrement','starting',watcher)
-    sellitem3=SellItem(user3, 'mercedes c coupe', 'car', 'desc','instantincrement','starting',watcher)
+    sellitem1=SellItem(user3, 'iphone x', 'phone','desc',('increment',0,0), 0)
+    sellitem2=SellItem(user3, 'iphone 5s', 'phone', 'desc',('increment',0,0),0)
+    sellitem3=SellItem(user3, 'mercedes c coupe', 'car', 'desc',('increment',0,0),0)
 except:
     raise ValueError('error while creating sellItems')
 
