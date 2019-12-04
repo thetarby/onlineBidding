@@ -1,17 +1,9 @@
 from packages.Watcher import Watcher
 import threading
 
-#sell item factory
-def SellItem(owner,title,item_type,decsription,bidtype,starting,minbid=1.0,image=None):
-    if(bidtype[0]=='increment'):
-        return SellItemIncrement(owner,title,item_type,decsription,bidtype,starting,minbid,image)
-    elif(bidtype[0]=='decrement'): 
-        return SellItemDecrement(owner,title,item_type,decsription,bidtype,starting,minbid,image)
-    elif(bidtype[0]=='instant increment'): 
-        return SellItemInstantIncrement(owner,title,item_type,decsription,bidtype,starting,minbid,image)
 
-class SellItemBase:
-    def __init__(self,owner,title,item_type,decsription,bidtype,starting,minbid,image):
+class SellItem:
+    def __init__(self,owner,title,item_type,decsription,bidtype,starting,minbid=1.0,image=None):
         self.owner=owner
         self.title=title
         self.item_type=item_type
@@ -32,13 +24,12 @@ class SellItemBase:
         self.stopbid = 0
         owner.financial_report['items_on_sale'].append(self)
 
-    """
+
     def _start_timer(self,period,callback):
         self.timer=threading.Timer(period, callback)
         self.timer.start()
-    """
 
-    """
+
     def _decrement_handler(self):
         self.current_price-=self.delta # TODO: check if it is less than zero
         if(self.current_price==self.stop_decrement):
@@ -47,9 +38,8 @@ class SellItemBase:
         else:
             self._start_timer(self.bidtype[1], self._decrement_handler)
             return 0
-    """
 
-    """
+
     # TODO: eğer adam en çok teklif edenden daha az verirse yine de bid kabul edilcek mi?
     def _instant_increment_handler(self,user,amount):
         if self.state == 'sold':
@@ -82,13 +72,24 @@ class SellItemBase:
             self.sell() 
         
         return 1
-    """
-    
+
     def start_auction(self, stopbid=None):
-        pass
-    
+        self.watcher.notify(self.item_type)
+        self.watcher.notify(self)
+        if(self.bidtype[0]=='increment'): # TODO: add min delta functionality
+            if stopbid is not None:
+                self.stopbid = stopbid
+            else:
+                print('stopbid is not defined')
+        elif(self.bidtype[0]=='decrement'):
+            self._start_timer(self.bidtype[1], self._decrement_handler)
+        elif(self.bidtype[0]=='instant increment'):
+            pass
+
     
     def bid(self, user, amount):# TODO: check starting price for the first bid
+        if(self.bidtype=='instant increment'):
+            return self._instant_increment_handler(user,amount)
         if amount <= self.last_bid:
             print('Amount should be more than the last bid')
             return 0
@@ -122,7 +123,9 @@ class SellItemBase:
     işimize yarıcak gibi genel olarak.
     """     
     def sell(self):
-        print('sold')
+        if(self.bidtype[0]=='instant increment'): # if it is intant increment get money of all users
+            for user,bid in self.bidded_users.keys():
+                user.reserved-=bid
         self.highest_payer.buy(self,self.item_type,self.last_bid)
         self.state = 'sold'
         self.history_['selling_price']=self.last_bid
@@ -156,8 +159,3 @@ class SellItemBase:
     def get_state(self):
         return self.state
 
-
-#to prevent circular dependency imports at the end of file
-from packages.SellItemDecrement import *
-from packages.SellItemIncrement import *
-from packages.SellItemInstantIncrement import *
