@@ -66,20 +66,23 @@ class User:
 
 
     def add_balance(self,amount):
-        self.balance=self.balance+amount
+        if self.balance + amount < 0:
+            print('You cannot withdraw {} dollars'.format(-amount))
+        else:
+            self.balance=self.balance+amount
 
     
     def buy(self,item,item_type,price):
         if price > self.balance:
-            raise ValueError('Not enough money')
-
-        self.balance -= price
-        self.reserved -= price
-        if(item_type not in self.owned_items):
-            self.owned_items[item_type]=[]
-        self.owned_items[item_type].append(item)
-        self.financial_report['expenses'].append((item, price))
-    
+            print('Not enough money to buy')
+        else:
+            self.balance -= price
+            self.reserved -= price
+            if(item_type not in self.owned_items):
+                self.owned_items[item_type]=[]
+            self.owned_items[item_type].append(item)
+            self.financial_report['expenses'].append((item, price))
+        
 
     def report(self):
         return self.financial_report

@@ -23,7 +23,7 @@ class SellItemBase:
         self.watcher=Watcher()
         self.highest_payer=None
         self.last_bid=minbid
-        self.state = 'active'
+        self.state = 'inactive'
         self.history_={
             'start_price':self.minbid, # minbid mi başlangıç fiyatı emin olamadım?????,
             'selling_price':0,
@@ -85,15 +85,17 @@ class SellItemBase:
     """
     
     def start_auction(self, stopbid=None):
-        pass
+        self.state = 'active'
+        self.watcher.notify(self.item_type)
+        self.watcher.notify(self)
     
     
     def bid(self, user, amount):# TODO: check starting price for the first bid
         if amount <= self.last_bid:
             print('Amount should be more than the last bid')
             return 0
-        if self.state == 'sold':
-            print('Auction is not active')
+        if self.state == 'sold' or self.state == 'inactive':
+            print('item is sold or inactive')
             return 0
         if user.get_balance() - user.get_reserved() < amount:
             print('Cannot bid that much amount')
@@ -106,7 +108,7 @@ class SellItemBase:
         if(old_user is not None): old_user.take_bid_back(self.last_bid)
         
         self.highest_payer = user
-        self.history_['bid_history'].append((self.last_bid,user))
+        self.history_['bid_history'].append((self.last_bid,user)) # AZAD: last_bid onceki adamin yenisiyle degistircez
         self.last_bid = amount
         user.reserve(amount)
         if amount >= self.stopbid:
