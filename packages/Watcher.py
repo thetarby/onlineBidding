@@ -36,12 +36,11 @@ class Watcher:
 
 
     def item_watcher_register(self,item,user,watch_method):
-        # niye title'a gore bakiyoruz ki direkt item var mi yok mu diye bakmayacaz mi?
-        if(item in self.item_watchers): # there may be mistake since two items could have same title
-            self.item_watchers[item].append((item,watch_method))
+        if(item in self.item_watchers):
+            self.item_watchers[item].append((user,watch_method))
         else:
-            self.item_watchers=[]
-            self.item_watchers.append((item,watch_method))
+            self.item_watchers[item]=[]
+            self.item_watchers[item].append((user,watch_method))
 
     """
         if user is watching, call its watch method

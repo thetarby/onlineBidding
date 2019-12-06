@@ -18,8 +18,7 @@ class User:
             'income': []
             }
         self.reserved = 0
-        self.verification_number = password # we set it to password for test purposes
-
+        self.verification_number = 'A1B1C1'
 
     def verify(self,verification_number):
         email_form = '^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$'
@@ -37,9 +36,9 @@ class User:
             if(old_password==self.password):
                 self.password=new_password
             else:
-                raise ValueError('Old password is not correct.')
+                print('Old password is not correct.')
         else:
-            self.password=new_password
+            print('Please look at your mail')
 
 
     def list_items(self, item_type=None, state='all'):
@@ -66,20 +65,23 @@ class User:
 
 
     def add_balance(self,amount):
-        self.balance=self.balance+amount
+        if self.balance + amount < 0:
+            print('You cannot withdraw {} dollars'.format(-amount))
+        else:
+            self.balance=self.balance+amount
 
     
     def buy(self,item,item_type,price):
         if price > self.balance:
-            raise ValueError('Not enough money')
-
-        self.balance -= price
-        self.reserved -= price
-        if(item_type not in self.owned_items):
-            self.owned_items[item_type]=[]
-        self.owned_items[item_type].append(item)
-        self.financial_report['expenses'].append((item, price))
-    
+            print('Not enough money to buy')
+        else:
+            self.balance -= price
+            self.reserved -= price
+            if(item_type not in self.owned_items):
+                self.owned_items[item_type]=[]
+            self.owned_items[item_type].append(item)
+            self.financial_report['expenses'].append((item, price))
+        
 
     def report(self):
         return self.financial_report
