@@ -10,6 +10,7 @@ def SellItem(owner,title,item_type,decsription,bidtype,starting,minbid=1.0,image
     elif(bidtype[0]=='instant increment'): 
         return SellItemInstantIncrement(owner,title,item_type,decsription,bidtype,starting,minbid,image)
 
+
 class SellItemBase:
     def __init__(self,owner,title,item_type,decsription,bidtype,starting,minbid,image):
         self.owner=owner
