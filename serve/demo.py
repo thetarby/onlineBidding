@@ -8,6 +8,7 @@ from packages.User import User
 HOST = '127.0.0.1'  # Standard loopback interface address (localhost)
 PORT = 65432        # Port to listen on (non-privileged ports are > 1023)
 
+users = {}
 
 class Agent(Thread):
     def __init__(self, conn, addr):
@@ -33,6 +34,17 @@ class Agent(Thread):
             print('user will be created')
             self.user = User(req['email'], req['name_surname'], req['password'])
             self.user.verify('A1B1C1')
+            users[req['email']] = self.user
+
+        elif req_type == 'login':
+            if req['email'] in users:
+                if req['password'] == users[req['email']]['password']:
+                    self.user = users[req['email']]
+                    print('{} logged in'.format(users[req['email']]['name_surname']))
+                else:
+                    print('wrong password')
+            else:
+                print('You should first register')
 
         elif req_type == 'start_auction':
             print('auction will be started')
