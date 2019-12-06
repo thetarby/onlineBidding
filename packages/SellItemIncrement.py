@@ -1,4 +1,5 @@
-from packages.SellItem import *
+# from packages.SellItem import *
+from packages.SellItem import SellItemBase
 
 class SellItemIncrement(SellItemBase):
     def __init__(self,owner,title,item_type,decsription,bidtype,starting,minbid=1.0,image=None):

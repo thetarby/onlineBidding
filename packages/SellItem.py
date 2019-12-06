@@ -25,7 +25,7 @@ class SellItemBase:
         self.last_bid=minbid
         self.state = 'inactive'
         self.history_={
-            'start_price':self.minbid, # minbid mi başlangıç fiyatı emin olamadım?????,
+            'start_price':self.starting,
             'selling_price':0,
             'bid_history':[] # a list of pairs which is (amount,user_who_paid_it)
         }
@@ -160,6 +160,6 @@ class SellItemBase:
 
 
 #to prevent circular dependency imports at the end of file
-from packages.SellItemDecrement import *
-from packages.SellItemIncrement import *
-from packages.SellItemInstantIncrement import *
+from packages.SellItemDecrement import SellItemDecrement
+from packages.SellItemIncrement import SellItemIncrement
+from packages.SellItemInstantIncrement import SellItemInstantIncrement

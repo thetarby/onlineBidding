@@ -18,8 +18,7 @@ class User:
             'income': []
             }
         self.reserved = 0
-        self.verification_number = password # we set it to password for test purposes
-
+        self.verification_number = 'A1B1C1'
 
     def verify(self,verification_number):
         email_form = '^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$'
@@ -37,9 +36,9 @@ class User:
             if(old_password==self.password):
                 self.password=new_password
             else:
-                raise ValueError('Old password is not correct.')
+                print('Old password is not correct.')
         else:
-            self.password=new_password
+            print('Please look at your mail')
 
 
     def list_items(self, item_type=None, state='all'):

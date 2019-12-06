@@ -1,5 +1,5 @@
-from packages.SellItem import *
-
+from packages.SellItem import SellItemBase
+import threading
 
 class SellItemDecrement(SellItemBase):
     def __init__(self,owner,title,item_type,decsription,bidtype,starting,minbid=1.0,image=None):
@@ -9,25 +9,14 @@ class SellItemDecrement(SellItemBase):
         self.delta=bidtype[2]
         self.stop_decrement=bidtype[3]
 
+
     def _start_timer(self,period,callback):
         self.timer=threading.Timer(period, callback)
         self.timer.start()
   
 
-    # def _decrement_handler(self):
-    #     print("asdasdasd")
-    #     self.current_price-=self.delta # TODO: check if it is less than zero
-    #     if(self.current_price==self.stop_decrement):
-    #         self.sell() # TODO: there might not be any customer check that case.
-    #         return 1
-    #     elif(self.current_price<self.last_bid):
-    #         self.sell()
-    #         return 1    
-    #     #if not sold reset timer    
-    #     self._start_timer(self.period, self._decrement_handler)
-    #     return 0
     def _decrement_handler(self):
-        print("asdasdasd")
+        print("decrement")
         new_price = self.current_price - self.delta
         if new_price > self.stop_decrement and new_price > 0:
             self.current_price=new_price
@@ -53,7 +42,6 @@ class SellItemDecrement(SellItemBase):
         self.watcher.notify(self)
         self._start_timer(self.period, self._decrement_handler)
 
-    # AZAD: decrement icin bid'i degistirmeyecez sanki?
     #override
     def bid(self, user, amount):# TODO: check starting price for the first bid
         if amount <= self.last_bid:
@@ -73,8 +61,8 @@ class SellItemDecrement(SellItemBase):
         if(old_user is not None): old_user.take_bid_back(self.last_bid)
         
         self.highest_payer = user
-        self.history_['bid_history'].append((self.last_bid,user)) # AZAD: last_bid onceki adamin yenisiyle degistircez
         self.last_bid = amount
+        self.history_['bid_history'].append((amount,user)) # AZAD: last_bid onceki adamin yenisiyle degistircez
         user.reserve(amount)
         if amount >= self.current_price:
             self.sell()

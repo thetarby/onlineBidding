@@ -1,6 +1,6 @@
-from packages.SellItem import *
-from packages.User import *
-from packages.Watcher import *
+from packages.SellItem import SellItem
+from packages.User import User
+from packages.Watcher import Watcher
 import threading
 import time
 print('users will be created')
@@ -18,11 +18,12 @@ print(user3.name_surname+' has been created\n')
 
 
 print('SellItems will be created')
-period=5
+period=5 # dakika olarak olcakmis degistiririz
 delta=10
+stop=20
 starting_price=100
 try:
-    sellitem1=SellItem(user3, 'iphone x', 'phone','desc',('decrement',period,delta,20), starting_price)
+    sellitem1=SellItem(user3, 'iphone x', 'phone','desc',('decrement',period,delta,stop), starting_price)
 except:
     raise ValueError('error while creating sellItems')
 
@@ -37,6 +38,9 @@ time.sleep(0.5)
 i=1
 def checkprice():
     global i
+    if sellitem1.state == 'sold':
+        return 1
+
     if(sellitem1.current_price!=(starting_price-i*delta)):
         print('current price is '+str(sellitem1.current_price)+' and it is wrong')
     else:
@@ -44,6 +48,7 @@ def checkprice():
     i+=1
     timer=threading.Timer(period, checkprice)
     timer.start()
+    timer.join()
     
 timer=threading.Timer(period, checkprice)
 timer.start()
@@ -67,3 +72,7 @@ if(20==user2.balance-user2.reserved):
     pass
 else:
     raise ValueError('reserve is wrong')
+
+timer.join()
+
+print(sellitem1.history())

@@ -1,4 +1,5 @@
-from packages.SellItem import *
+# from packages.SellItem import *
+from packages.SellItem import SellItemBase
 
 class SellItemInstantIncrement(SellItemBase):
     def __init__(self,owner,title,item_type,decsription,bidtype,starting,minbid=1.0,image=None):
@@ -17,18 +18,13 @@ class SellItemInstantIncrement(SellItemBase):
         if(user not in self.bidded_users):
             self.bidded_users[user]=0
         if self.state == 'sold':
-            print('item is sold')
+            print('item is already sold')
             return 0
         if user.get_balance() - user.get_reserved() < amount:
-            print('Cannot bid that much amount')
+            print('{} does not have {} in account'.format(user.name_surname, amount))
             return 0
-        # initialize etmeyi en yukari aldim kardo
-        # yoksa user dictionaryde yokken ne kadar verdigine ulasmaya caliscak
-        if self.last_bid>=(self.bidded_users[user]+amount):
-            print('you should bid more')
-            return 0
-        if(amount<self.minbid):
-            print('bid is less than minbid')
+        if amount<self.minbid or self.last_bid>=(self.bidded_users[user]+amount):
+            print('{} should bid more than {}'.format(user.name_surname, amount))
             return 0
         if self.state == 'active':
             self.state = 'onhold'
@@ -46,7 +42,8 @@ class SellItemInstantIncrement(SellItemBase):
         #auto sell is reached
         if(self.total_bid>=self.autosell):
             self.sell() 
-        
+            print('{} is sold to {} with a total amount of {}'.format(self.title, user.name_surname, self.total_bid))
+        print('{} bidded {}'.format(user.name_surname, amount))
         return 1
 
 

@@ -1,6 +1,6 @@
-from packages.SellItem import *
-from packages.User import *
-from packages.Watcher import *
+from packages.SellItem import SellItem
+from packages.User import User
+from packages.Watcher import Watcher
 
 
 """
@@ -29,9 +29,9 @@ if(user4.enable):
 
 print('SellItems will be created')
 try:
-    sellitem1=SellItem(user3, 'iphone x', 'phone','desc',('increment',0,0), 0)
-    sellitem2=SellItem(user3, 'iphone 5s', 'phone', 'desc',('increment',0,0),0)
-    sellitem3=SellItem(user3, 'mercedes c coupe', 'car', 'desc',('increment',0,0),0)
+    sellitem1=SellItem(user3, 'iphone x', 'phone','desc',('increment',0,15), 0)
+    sellitem2=SellItem(user3, 'iphone 5s', 'phone', 'desc',('increment',0,50),0)
+    sellitem3=SellItem(user3, 'mercedes c coupe', 'car', 'desc',('increment',0,56),0)
 except:
     raise ValueError('error while creating sellItems')
 
@@ -98,14 +98,14 @@ except:
 
 print('a phone item will be on sale')
 try:
-    sellitem1.start_auction(15)
+    sellitem1.start_auction()
 except:
     raise ValueError('error while starting auction')
 
 
 print('a car item will be on sale')
 try:
-    sellitem3.start_auction(56)
+    sellitem3.start_auction()
 except:
     raise ValueError('error while starting auction')
 
@@ -130,7 +130,7 @@ user2.add_balance(50)#60
 
 sellitem1.bid(user1,10)
 if(10==user1.balance-user1.reserved):
-    pass
+    print('user1 bidded 10 for sellitem1')
 else:
     raise ValueError('reserve is wrong')
 
@@ -138,18 +138,18 @@ else:
 #should be rejected since it is lower than last bid
 x=sellitem1.bid(user2,8)
 if(x==0): pass
-else: raise ValueError('bid should have been rejected')
+else: raise ValueError('user2 CANNOT bid 8 for sellitem1')
 
 if(60==user2.balance-user2.reserved):
      pass
 else:
-    raise ValueError('reserve is wrong')   
+    raise ValueError('user2\'s reserve is wrong')   
 
 
 #should be rejected since user1 does not have that much money
 x=sellitem1.bid(user1, 30)
 if(x==0): pass
-else: raise ValueError('bid should have been rejected')
+else: raise ValueError('user1 cannot bid 30 for sellitem1. bid should have been rejected')
 
 
 #item should be sold since stop bid is reached
@@ -157,14 +157,14 @@ sellitem1.bid(user2,15)
 if(45==user2.balance-user2.reserved):
     pass
 else:
-    raise ValueError('reserve is wrong')
+    raise ValueError('user2\'s reserve is wrong')
 
 
 
 if(20==user1.balance-user1.reserved):
     pass
 else:
-    raise ValueError('reserve is wrong')
+    raise ValueError('user1\'s reserve is wrong')
 """
     -------------------------END OF TEST FOR SELLITEM-----------------------------
 """
@@ -203,7 +203,7 @@ if(sellitem1.history()['selling_price']==15):
 else:
     raise ValueError('sellitem history is wrong')
 
-if(sellitem1.history()['bid_history'][0]==(1.0,user1)):
+if(sellitem1.history()['bid_history'][0]==(10,user1)):
     pass
 else:
     raise ValueError('sellitem history is wrong')
