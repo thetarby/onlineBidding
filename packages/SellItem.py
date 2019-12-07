@@ -1,6 +1,5 @@
 from packages.Watcher import Watcher
 import threading
-
 #sell item factory
 def SellItem(owner,title,item_type,decsription,bidtype,starting,minbid=1.0,image=None):
     if(bidtype[0]=='increment'):
@@ -12,7 +11,11 @@ def SellItem(owner,title,item_type,decsription,bidtype,starting,minbid=1.0,image
 
 
 class SellItemBase:
+    counter_id=0
     def __init__(self,owner,title,item_type,decsription,bidtype,starting,minbid,image):
+        SellItemBase.counter_id=SellItemBase.counter_id+1
+        self.id=SellItemBase.counter_id
+        self.lock=threading.Lock()
         self.owner=owner
         self.title=title
         self.item_type=item_type
@@ -31,92 +34,24 @@ class SellItemBase:
             'bid_history':[] # a list of pairs which is (amount,user_who_paid_it)
         }
         self.stopbid = 0
-        owner.financial_report['items_on_sale'].append(self)
-
-    """
-    def _start_timer(self,period,callback):
-        self.timer=threading.Timer(period, callback)
-        self.timer.start()
-    """
-
-    """
-    def _decrement_handler(self):
-        self.current_price-=self.delta # TODO: check if it is less than zero
-        if(self.current_price==self.stop_decrement):
-            self.sell() # TODO: there might not be any customer check that case.
-            return 1
-        else:
-            self._start_timer(self.bidtype[1], self._decrement_handler)
-            return 0
-    """
-
-    """
-    # TODO: eğer adam en çok teklif edenden daha az verirse yine de bid kabul edilcek mi?
-    def _instant_increment_handler(self,user,amount):
-        if self.state == 'sold':
-            print('Auction is not active')
-            return 0
-        if user.get_balance() - user.get_reserved() < amount:
-            print('Cannot bid that much amount')
-            return 0
-        if self.bidded_users[self.highest_payer]<=(self.bidded_users[user]+amount):
-            print('you should bid more')
-            return 0
-        if(amount<self.bidtype[1]):
-            print('bid is less than mindelta')
-            return 0
-        if self.state == 'active':
-            self.state = 'onhold'
-            self.history_['start_price'] = amount
+        owner.financial_report['items_on_sale'].append(self.id)
 
 
-        old_user=self.highest_payer
-        self.highest_payer = user
-        self.history_['bid_history'].append((amount,user))
-        self.bidded_users[user]+=amount
-        self.last_bid=self.bidded_users[user]
-        self.total_bid+=amount
-        user.reserve(amount)    
-
-        #auto sell is reached
-        if(self.total_bid>=self.bidtype[2]):
-            self.sell() 
-        
-        return 1
-    """
+    def require_lock(f):
+        def wrapper(self,*args, **kwargs):
+            with self.lock:
+                return f(self,*args,**kwargs)
+        return wrapper
     
+
     def start_auction(self, stopbid=None):
         self.state = 'active'
         self.watcher.notify(self.item_type)
         self.watcher.notify(self)
     
-    
-    def bid(self, user, amount):# TODO: check starting price for the first bid
-        if amount <= self.last_bid:
-            print('Amount should be more than the last bid')
-            return 0
-        if self.state == 'sold' or self.state == 'inactive':
-            print('item is sold or inactive')
-            return 0
-        if user.get_balance() - user.get_reserved() < amount:
-            print('Cannot bid that much amount')
-            return 0
-        if self.state == 'active':
-            self.state = 'onhold'
-            self.history_['start_price'] = amount
 
-        old_user=self.highest_payer
-        if(old_user is not None): old_user.take_bid_back(self.last_bid)
-        
-        self.highest_payer = user
-        self.history_['bid_history'].append((self.last_bid,user)) # AZAD: last_bid onceki adamin yenisiyle degistircez
-        self.last_bid = amount
-        user.reserve(amount)
-        if amount >= self.stopbid:
-            self.sell()
-        #item state'i değiştiği içiin izleyenleri notify et
-        self.watcher.notify(self)
-        return 1
+    def bid(self, user, amount):# TODO: check starting price for the first bid
+        pass
 
     """
     burda ownerı bilgilendirmemiz lazım senin itemin satıldı diye
@@ -132,20 +67,23 @@ class SellItemBase:
         self.watcher.notify(self)
         self.owner.item_sold(self)
 
-
+    @require_lock
     def view(self):
-        print('owner: ', self.owner)
-        print('title: ', self.title)
-        print('item_type: ', self.item_type)
-        print('description: ', self.decsription)
-        print('bidtype: ', self.bidtype)
-        print('starting: ', self.starting)
-        print('minbid: ', self.minbid)
-        print('auction data: ', self.history_)
+        res={
+            'owner':self.owner,
+            'title':self.title,
+            'item_type':self.item_type,
+            'description':self.decsription,
+            'bidtype':self.bidtype,
+            'starting': self.starting,
+            'minbid':self.minbid,
+            'auction data': self.history_
+        }
+        return res
 
 
     def watch(self, user,method):
-        self.watcher.item_watcher_register(self,user,method)
+        return self.watcher.item_watcher_register(self,user,method)
 
 
     def history(self):    

@@ -43,16 +43,14 @@ class SellItemDecrement(SellItemBase):
         self._start_timer(self.period, self._decrement_handler)
 
     #override
+    @SellItemBase.require_lock
     def bid(self, user, amount):# TODO: check starting price for the first bid
         if amount <= self.last_bid:
-            print('Amount should be more than the last bid')
-            return 0
+            return('Amount should be more than the last bid')
         if self.state == 'sold' or self.state == 'inactive':
-            print('item is sold or inactive')
-            return 0
+            return('item is sold or inactive')
         if user.get_balance() - user.get_reserved() < amount:
-            print('Cannot bid that much amount')
-            return 0
+            return('Cannot bid that much amount')
         if self.state == 'active':
             self.state = 'onhold'
             self.history_['start_price'] = amount
@@ -62,7 +60,7 @@ class SellItemDecrement(SellItemBase):
         
         self.highest_payer = user
         self.last_bid = amount
-        self.history_['bid_history'].append((amount,user)) # AZAD: last_bid onceki adamin yenisiyle degistircez
+        self.history_['bid_history'].append((amount,user.email)) # AZAD: last_bid onceki adamin yenisiyle degistircez
         user.reserve(amount)
         if amount >= self.current_price:
             self.sell()

@@ -14,18 +14,16 @@ class SellItemInstantIncrement(SellItemBase):
     # senaryoya bagli kanka. eger insanlar kim ne kadar vermis bilmiyorsa kim ne veriyorsa kosulsuz almak lazim
     # eger last_bid diye en yuksek mebla bilincekse daha dusuk verirlerse kabul etmeyek sacma olur
     #override
+    @SellItemBase.require_lock
     def bid(self,user,amount):
         if(user not in self.bidded_users):
             self.bidded_users[user]=0
         if self.state == 'sold':
-            print('item is already sold')
-            return 0
+            return('item is already sold')
         if user.get_balance() - user.get_reserved() < amount:
-            print('{} does not have {} in account'.format(user.name_surname, amount))
-            return 0
+            return('{} does not have {} in account'.format(user.name_surname, amount))
         if amount<self.minbid or self.last_bid>=(self.bidded_users[user]+amount):
-            print('{} should bid more than {}'.format(user.name_surname, amount))
-            return 0
+            return('{} should bid more than {}'.format(user.name_surname, amount))
         if self.state == 'active':
             self.state = 'onhold'
             self.history_['start_price'] = amount
@@ -33,7 +31,7 @@ class SellItemInstantIncrement(SellItemBase):
         # kardo simdi onceden 50 veren bu sefer 20 verirse toplam 70 vermis gibi mi dusuncez
         # last bid ile kiyaslarken? ve history'e eklerken 70 verdi mi diyecez yoksa 20 mi?
         self.highest_payer = user
-        self.history_['bid_history'].append((amount,user))
+        self.history_['bid_history'].append((amount,user.email))
         self.bidded_users[user]+=amount
         self.last_bid=self.bidded_users[user]
         self.total_bid+=amount

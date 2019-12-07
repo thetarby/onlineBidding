@@ -1,6 +1,6 @@
 # from packages.SellItem import *
 from packages.SellItem import SellItemBase
-
+import time
 class SellItemIncrement(SellItemBase):
     def __init__(self,owner,title,item_type,decsription,bidtype,starting,minbid=1.0,image=None):
         super().__init__(owner,title,item_type,decsription,bidtype,starting,minbid,image)
@@ -9,16 +9,15 @@ class SellItemIncrement(SellItemBase):
 
     
     #override
+    @SellItemBase.require_lock
     def bid(self, user, amount):
+        time.sleep(10)
         if amount < self.last_bid + self.min_delta:
-            print('Amount should be more than the last bid plus min_delta')
-            return 0
+            return('Amount should be more than the last bid plus min_delta')
         if self.state == 'sold':
-            print('item is sold')
-            return 0
+            return('item is sold')
         if user.get_balance() - user.get_reserved() < amount:
-            print('Cannot bid that much amount')
-            return 0
+            return('Cannot bid that much amount')
         if self.state == 'active':
             self.state = 'onhold'
             self.history_['start_price'] = amount
@@ -28,7 +27,7 @@ class SellItemIncrement(SellItemBase):
         
         self.highest_payer = user
         self.last_bid = amount
-        self.history_['bid_history'].append((amount,user))
+        self.history_['bid_history'].append((amount,user.email))
         user.reserve(amount)
         if amount >= self.instantsell:
             self.sell()

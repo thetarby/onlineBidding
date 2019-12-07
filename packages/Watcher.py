@@ -23,9 +23,8 @@ class Watcher:
     def register(self,user,watch_method,item_type):
         if(item_type in self.observers):
             temp=[1 for user_method_pair in self.observers[item_type] if user_method_pair[0]==user]
-            if(len(temp)): # if user is watching the same item type with same method do not register
-                print('user already watching the item with the same method')
-                return 0
+            if(len(temp)):
+                return('user already watching the item with the same method')
             else:
                 self.observers[item_type].append((user, watch_method))
                 return 1   
@@ -37,10 +36,16 @@ class Watcher:
 
     def item_watcher_register(self,item,user,watch_method):
         if(item in self.item_watchers):
-            self.item_watchers[item].append((user,watch_method))
+            temp=[1 for user_method_pair in self.item_watchers[item] if user_method_pair[0]==user]
+            if(len(temp)):
+                return('item is already being watched by the user')
+            else:
+                self.item_watchers[item].append((user,watch_method))
+                return 1
         else:
             self.item_watchers[item]=[]
             self.item_watchers[item].append((user,watch_method))
+            return 1
 
     """
         if user is watching, call its watch method

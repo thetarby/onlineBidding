@@ -25,25 +25,26 @@ class User:
         if re.match(email_form, self.email) != None:
             if verification_number == self.verification_number:
                 self.enable = True
+                return 1
             else:
-                print('Wrong verification number')
+                return('Wrong verification number')
         else:
-            print('Enter a valid email address')          
+            return('Enter a valid email address')          
 
 
     def change_password(self,new_password,old_password=None):
         if(old_password is not None):
             if(old_password==self.password):
                 self.password=new_password
+                return 1
             else:
-                print('Old password is not correct.')
+                return('Old password is not correct.')
         else:
-            print('Please look at your mail')
+            return('Please look at your mail')
 
 
     def list_items(self, item_type=None, state='all'):
         items = []
-        
         if item_type == None:   # list all item types
             if state == 'all':
                 for itype in self.owned_items:
@@ -66,9 +67,10 @@ class User:
 
     def add_balance(self,amount):
         if self.balance + amount < 0:
-            print('You cannot withdraw {} dollars'.format(-amount))
+            return('You cannot withdraw {} dollars'.format(-amount))
         else:
             self.balance=self.balance+amount
+            return 1
 
     
     def buy(self,item,item_type,price):
@@ -79,8 +81,8 @@ class User:
             self.reserved -= price
             if(item_type not in self.owned_items):
                 self.owned_items[item_type]=[]
-            self.owned_items[item_type].append(item)
-            self.financial_report['expenses'].append((item, price))
+            self.owned_items[item_type].append(item.id)
+            self.financial_report['expenses'].append((item.id, price))
         
 
     def report(self):
@@ -108,7 +110,7 @@ class User:
 
     
     def item_sold(self, item):
-        self.financial_report['items_sold'].append(item)
-        self.financial_report['items_on_sale'].remove(item)
-        self.financial_report['income'].append((item, item.history_['selling_price']))
+        self.financial_report['items_sold'].append(item.id)
+        self.financial_report['items_on_sale'].remove(item.id)
+        self.financial_report['income'].append((item.id, item.history_['selling_price']))
     

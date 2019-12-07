@@ -137,18 +137,21 @@ else:
 
 #should be rejected since it is lower than last bid
 x=sellitem1.bid(user2,8)
-if(x==0): pass
-else: raise ValueError('user2 CANNOT bid 8 for sellitem1')
+print(x)
+if(x!=1): 
+    pass
+else: 
+    raise ValueError('user2 CANNOT bid 8 for sellitem1')
 
 if(60==user2.balance-user2.reserved):
-     pass
+    pass
 else:
     raise ValueError('user2\'s reserve is wrong')   
 
 
 #should be rejected since user1 does not have that much money
 x=sellitem1.bid(user1, 30)
-if(x==0): pass
+if(x!=1): pass
 else: raise ValueError('user1 cannot bid 30 for sellitem1. bid should have been rejected')
 
 
@@ -179,14 +182,14 @@ print(user2.report())
 print(user3.report())
 
 print('\nchecking reports if they are succesful...')
-if(user3.report()['items_sold'][0]==sellitem1 and \
-   user3.report()['items_on_sale'][0]==sellitem2 and \
-   user3.report()['items_on_sale'][1]==sellitem3):
+if(user3.report()['items_sold'][0]==sellitem1.id and \
+   user3.report()['items_on_sale'][0]==sellitem2.id and \
+   user3.report()['items_on_sale'][1]==sellitem3.id):
     pass
 else:
     raise ValueError('user3 report is wrong')
 
-if(user2.report()['expenses'][0]==(sellitem1,15)):
+if(user2.report()['expenses'][0]==(sellitem1.id,15)):
     pass
 else:
     raise ValueError('user1 report is wrong')        
@@ -203,7 +206,7 @@ if(sellitem1.history()['selling_price']==15):
 else:
     raise ValueError('sellitem history is wrong')
 
-if(sellitem1.history()['bid_history'][0]==(10,user1)):
+if(sellitem1.history()['bid_history'][0]==(10,user1.email)):
     pass
 else:
     raise ValueError('sellitem history is wrong')
