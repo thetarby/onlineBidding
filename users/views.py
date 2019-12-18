@@ -13,3 +13,18 @@ def register(request):
     else:
         form=UserRegisterForm()
     return render(request, 'users/register.html', {'form':form})
+
+
+def home(request):
+    context = {
+        'username': request.user.username  # bu olmuyor ya gozukmuyor home pagede
+    }
+    return render(request,'users/home.html', context)
+
+
+def list_items(request):
+    return render(request,'users/list_items.html')
+
+
+def add_item(request):
+    return render(request,'users/add_item.html')

@@ -10,3 +10,4 @@ def home(request):
 
 def bid_screen(request):
     return render(request,'bid/bid_screen.html')
+
