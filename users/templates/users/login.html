@@ -1,0 +1,31 @@
+<!DOCTYPE html> 
+
+<html>
+<head>
+    <title>Bid</title>
+</head>
+<body>
+    <div>
+        {% if messages %}
+            {% for message in messages %}
+                <div> {{message}} </div>
+            {%endfor%}
+        {%endif%}
+    </div>
+    <div class="content-section">
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Log In</legend>
+                {{ form }}
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-info" type="submit">Log In!</button>
+            </div>
+        </form>
+        <div class="border-top pt-3">
+            <small class="text-muted">Do You Need An Account? <a class="ml-2" href="#">Sign Up!</a></small>
+        </div>
+    </div>
+</body>
+</html>
