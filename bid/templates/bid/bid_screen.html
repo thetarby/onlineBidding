@@ -5,6 +5,18 @@
     <title>Bid</title>
 </head>
 <body>
-    <h1>Bid Bitch</h1>
+    <div style='margin:50px; border:1px solid; width: 200px;'>
+        <p>{{ item.title }}</p>
+        <p>{{item.description}}</p>
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Make A Bid</legend>
+                <input type="text" name="amount" value="10">
+                <input type="hidden" name="item_id" value={{item.id}}>
+                <input type="submit" value="Submit">
+            </fieldset>
+        </form>
+    </div>
 </body>
 </html>

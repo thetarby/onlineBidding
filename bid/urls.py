@@ -4,5 +4,5 @@ from . import views
 app_name = 'bid_app'
 urlpatterns=[
     path('',views.home,name='bid-home'),
-    path('bidding/',views.bid_screen,name='bid-bid-screen'),
+    path('bidding/<int:item_id>',views.bid_screen,name='bid-bid-screen'),
 ]

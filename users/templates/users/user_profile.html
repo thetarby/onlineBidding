@@ -1,0 +1,15 @@
+<!DOCTYPE html> 
+
+<html>
+<head>
+    <title>Bid</title>
+</head>
+<body>
+    <div class='user'>
+        {% if user %}
+            <p> Ad Soyad: {{ user.name_surname }}</p>
+            <p> Bakiye: {{ user.balance }}</p>
+        {%endif%}
+    </div>
+</body>
+</html>

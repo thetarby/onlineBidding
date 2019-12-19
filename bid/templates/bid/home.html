@@ -7,18 +7,26 @@
 <body>
     <h1>Items:</h1>
     {% for item in items %}
-    <div style='margin:50px; border:1px solid; width: 200px;'>
-        <p>{{ item.title }}</p>
-        <p>{{item.description}}</p>
-        <form method="POST" action="{% url 'bid_app:bid-bid-screen' %}">
-            {% csrf_token %}
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Make A Bid</legend>
-                <input type="text" name="amount" value="10">
-                <input type="submit" value="Submit">
-            </fieldset>
-        </form>
-    </div>
+        <div id={{item.id}} style='margin:50px; border:1px solid; width: 200px;'>
+            <p>{{ item.title }}</p>
+            <p>{{item.description}}</p>
+            <form method="POST">
+                {% csrf_token %}
+                <fieldset class="form-group">
+                    <legend class="border-bottom mb-4">Make A Bid</legend>
+                    <input type="text" name="amount" value="10">
+                    <input type="submit" value="Submit">
+                </fieldset>
+            </form>
+        </div>
+    {%endfor%}
+    
+    {% for item in items %}
+        <script type="text/javascript">
+            document.getElementById({{item.id}}).onclick = function () {
+                location.href = "./bidding/"+{{item.id}};
+            };
+        </script>
     {%endfor%}
 </body>
 </html>

@@ -13,7 +13,7 @@
         {%endif%}
     </div>
     <div class="content-section">
-        <form method="POST" action="{% url 'users_app:home' %}">
+        <form method="POST">
             {% csrf_token %}
             <fieldset class="form-group">
                 <legend class="border-bottom mb-4">Log In</legend>
