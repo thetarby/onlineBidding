@@ -39,6 +39,7 @@ body {
         <a id="auction-button" href="{% url 'bid_app:bid-home' %}">View Auction Page</a>
         <a id="add-item-button" href="{% url 'users_app:add_item' %}">Add item</a>
         <a id="profile-button" href="{% url 'users-user-profile' %}">My Profile</a>
+        <a id="list-items-button" href="{% url 'users_app:list_items' %}">List My Items</a>
 
         <a style="float:right" href="/logout">Logout</a>,
 		<a style="float:right" href="/admin/">Admin</a>
@@ -56,6 +57,9 @@ body {
     }
     else if(window.location.pathname=='/profile' || window.location.pathname=='/profile/'){
         document.getElementById("profile-button").className+="active"
+    }
+    else if(window.location.pathname=='/home/list_items/' || window.location.pathname=='/home/list_items'){
+        document.getElementById("list-items-button").className+="active"
     }
     console.log(window.location.pathname)
 </script>

@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .forms import UserRegisterForm 
 from .models import UserProfile
 from bid.views import Item
+from bid.models import SellItemIncrement
 
 # Create your views here.
 def register(request):
@@ -32,12 +33,22 @@ def home(request):
 
 
 def list_items(request):
-    owned_items = Item.objects.filter(owner=request.user)
-    print(owned_items)
-    context = {
-        'owned_items': owned_items
-    }
-    return render(request,'users/list_items.html', context)
+    if request.method=='GET':
+        owned_items = Item.objects.filter(owner=request.user)
+        print(owned_items)
+        context = {
+            'owned_items': owned_items
+        }
+        return render(request,'users/list_items.html', context)
+    if request.method=='POST':
+        item=Item.objects.get(id=request.POST['item_id'])
+        SellItemIncrement(item=item,starting=0,current_price=0,state='active',instant_sell=20).save()
+        owned_items = Item.objects.filter(owner=request.user)
+        print(owned_items)
+        context = {
+            'owned_items': owned_items
+        }
+        return render(request,'users/list_items.html', context)
 
 
 def add_item(request):

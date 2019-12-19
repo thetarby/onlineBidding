@@ -1,10 +1,5 @@
-<!DOCTYPE html> 
-
-<html>
-<head>
-    <title>List Owned Items</title>
-</head>
-<body>
+{% extends "users/base.html" %}
+{% block content %}
     <h1>Owned Items</h1>
     {% for item in owned_items %}
     <div style='margin:50px; border:1px solid; width: 200px;'>
@@ -13,11 +8,11 @@
         <form method="POST">
             {% csrf_token %}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Start Auction</legend>
-                <input type="submit" value="Submit">
+                <input type="submit" value="Sell">
+                <input type="hidden" name="item_id" value={{item.id}}>
             </fieldset>
         </form>
     </div>
     {%endfor%}
-</body>
-</html>
+
+{% endblock %}

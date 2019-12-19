@@ -6,7 +6,7 @@ from users.models import UserProfile
 class Item(models.Model):
     title=models.CharField(max_length=100)
     description=models.TextField()
-    owner=models.ForeignKey(User, on_delete=models.CASCADE)
+    owner=models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     item_type=models.CharField(max_length=100)
 
 
