@@ -3,6 +3,8 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from .forms import UserRegisterForm 
 from .models import UserProfile
+from bid.views import Item
+
 # Create your views here.
 def register(request):
     if request.method== 'POST': 
@@ -11,7 +13,7 @@ def register(request):
             form.save() # hash password and save it to db
             username = form.cleaned_data['username']
             messages.success(request, 'Account created for {}'.format(username))
-            return redirect('bid-home')
+            return redirect("{% url 'bid_app:bid-home' %}")
     else:
         form=UserRegisterForm()
     return render(request, 'users/register.html', {'form':form})
@@ -24,14 +26,31 @@ def user_profile(request):
 
 def home(request):
     context = {
-        'username': request.user.username  # bu olmuyor ya gozukmuyor home pagede
+        'username': request.user.username 
     }
     return render(request,'users/home.html', context)
 
 
 def list_items(request):
-    return render(request,'users/list_items.html')
+    owned_items = Item.objects.filter(owner=request.user)
+    print(owned_items)
+    context = {
+        'owned_items': owned_items
+    }
+    return render(request,'users/list_items.html', context)
 
 
 def add_item(request):
-    return render(request,'users/add_item.html')
+    if request.method=='GET':
+        return render(request,'users/add_item.html')
+    else:
+        title=request.POST['title']
+        description=request.POST['description']
+        item_type=request.POST['item_type']
+        item = Item(title=title, description=description, owner=request.user, item_type=item_type)
+        item.save()
+        owned_items = Item.objects.filter(owner__id=request.user.id)
+        context = {
+            'owned_items': owned_items
+        }
+        return render(request,'users/list_items.html', context)
