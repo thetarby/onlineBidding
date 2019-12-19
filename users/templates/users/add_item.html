@@ -1,5 +1,18 @@
 {% extends "users/base.html" %}
 {% block content %}
-    <h1>add Item</h1>
+
+    <div style='margin:50px; border:1px solid; width: 200px;'>
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Make A Bid</legend>
+                <input type="text" name="title">
+                <input type="text" name="description">
+                <input type="text" name="item_type">
+                <input type="submit" value="Submit">
+            </fieldset>
+        </form>
+    </div>
 
 {% endblock %}
+
