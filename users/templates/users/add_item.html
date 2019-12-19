@@ -5,10 +5,10 @@
         <form method="POST">
             {% csrf_token %}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Make A Bid</legend>
-                <input type="text" name="title">
-                <input type="text" name="description">
-                <input type="text" name="item_type">
+                <legend class="border-bottom mb-4">Add Item</legend>
+                <input type="text" name="title" placeholder="Title">
+                <input type="text" name="description" placeholder="Description">
+                <input type="text" name="item_type" placeholder="Item type">
                 <input type="submit" value="Submit">
             </fieldset>
         </form>
