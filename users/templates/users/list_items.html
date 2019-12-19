@@ -2,9 +2,22 @@
 
 <html>
 <head>
-    <title>List items</title>
+    <title>List Owned Items</title>
 </head>
 <body>
-    <h1>Your Items</h1>
+    <h1>Owned Items</h1>
+    {% for item in owned_items %}
+    <div style='margin:50px; border:1px solid; width: 200px;'>
+        <p>{{ item.title }}</p>
+        <p>{{item.description}}</p>
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Start Auction</legend>
+                <input type="submit" value="Submit">
+            </fieldset>
+        </form>
+    </div>
+    {%endfor%}
 </body>
 </html>
