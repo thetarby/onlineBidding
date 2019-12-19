@@ -26,7 +26,7 @@ def bid_screen(request,item_id):
         amount=int(request.POST['amount'])
         user=User.objects.all().filter(id=request.user.id).select_related('userprofile').first().userprofile
         item=int(request.POST['item_id'])
-        SellItem.objects.all().select_related('item').get(item__id=item).sellitemincrement.bid(user,amount)
+        SellItem.objects.filter(state='active').select_related('item').get(item__id=item).sellitemincrement.bid(user,amount)
         item=Item.objects.filter(id=item_id).first()
         context={
             'item':item

@@ -14,7 +14,7 @@ def register(request):
             form.save() # hash password and save it to db
             username = form.cleaned_data['username']
             messages.success(request, 'Account created for {}'.format(username))
-            return redirect("{% url 'bid_app:bid-home' %}")
+            return redirect('users_app:home')
     else:
         form=UserRegisterForm()
     return render(request, 'users/register.html', {'form':form})
@@ -34,7 +34,7 @@ def home(request):
 
 def list_items(request):
     if request.method=='GET':
-        owned_items = Item.objects.filter(owner=request.user)
+        owned_items = Item.objects.filter(owner__id=request.user.id)
         print(owned_items)
         context = {
             'owned_items': owned_items
@@ -43,7 +43,7 @@ def list_items(request):
     if request.method=='POST':
         item=Item.objects.get(id=request.POST['item_id'])
         SellItemIncrement(item=item,starting=0,current_price=0,state='active',instant_sell=20).save()
-        owned_items = Item.objects.filter(owner=request.user)
+        owned_items = Item.objects.filter(owner__id=request.user.id)
         print(owned_items)
         context = {
             'owned_items': owned_items
@@ -58,7 +58,7 @@ def add_item(request):
         title=request.POST['title']
         description=request.POST['description']
         item_type=request.POST['item_type']
-        item = Item(title=title, description=description, owner=request.user, item_type=item_type)
+        item = Item(title=title, description=description, owner=request.user.userprofile, item_type=item_type)
         item.save()
         owned_items = Item.objects.filter(owner__id=request.user.id)
         context = {
