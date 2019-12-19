@@ -1,6 +1,63 @@
 <html>
+<head>
+    <style>
+    /* Add a black background color to the top navigation */
+body {
+    margin:0;
+}
+.topnav {
+  background-color: #333;
+  overflow: hidden;
+}
+
+/* Style the links inside the navigation bar */
+.topnav a {
+  float: left;
+  color: #f2f2f2;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+}
+
+/* Change the color of links on hover */
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+/* Add a color to the active/current link */
+.topnav a.active {
+  background-color: #4CAF50;
+  color: white;
+}
+    </style>
+</head>
 <body>
-<h1>Home Page</h1>
+    <div class="topnav">
+        <a id="home-button" href="{% url 'users_app:home' %}">Home</a>
+        <a id="auction-button" href="{% url 'bid_app:bid-home' %}">View Auction Page</a>
+        <a id="add-item-button" href="{% url 'users_app:add_item' %}">Add item</a>
+        <a id="profile-button" href="{% url 'users-user-profile' %}">My Profile</a>
+
+        <a style="float:right" href="/logout">Logout</a>,
+		<a style="float:right" href="/admin/">Admin</a>
+    </div>
 {% block content %}{% endblock %}
+<script>
+    if(window.location.pathname=='/home' || window.location.pathname=='/home/'){
+        document.getElementById("home-button").className+="active"
+    }
+    else if(window.location.pathname=='/bid' || window.location.pathname=='/bid/'){
+        document.getElementById("auction-button").className+="active"
+    }
+    else if(window.location.pathname=='/home/add_item' || window.location.pathname=='/home/add_item/'){
+        document.getElementById("add-item-button").className+="active"
+    }
+    else if(window.location.pathname=='/profile' || window.location.pathname=='/profile/'){
+        document.getElementById("profile-button").className+="active"
+    }
+    console.log(window.location.pathname)
+</script>
 </body>
 </html>

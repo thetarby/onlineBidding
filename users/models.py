@@ -27,6 +27,7 @@ class UserProfile(models.Model):
             print('YARRAMI YEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEee')
             self.reserved -= price
             item.state='sold'
+            item.owner=self
             item.save()
             #self.owned_items[item_type].append(item.id)
             #self.financial_report['expenses'].append((item.id, price))

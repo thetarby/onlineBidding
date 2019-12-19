@@ -1,10 +1,5 @@
-<!DOCTYPE html> 
-
-<html>
-<head>
-    <title>Home</title>
-</head>
-<body>
+{% extends "users/base.html" %}
+{% block content %}
     <h1>Items:</h1>
     {% for item in items %}
         <div id={{item.id}} style='margin:50px; border:1px solid; width: 200px;'>
@@ -28,5 +23,4 @@
             };
         </script>
     {%endfor%}
-</body>
-</html>
+{% endblock %}

@@ -1,9 +1,5 @@
 {% extends "users/base.html" %}
 {% block content %}
-<p align="right">{{ username }},<a href="/logout">Logout</a>,
-			<a href="/admin/">Admin</a></p>
-
-
 <p>{% if message %}
    <strong>{{ message }}</strong>
    {% endif %}
