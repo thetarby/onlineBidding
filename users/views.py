@@ -43,11 +43,18 @@ def list_items(request):
     if request.method=='POST':
         item=Item.objects.get(id=request.POST['item_id'])
         #SellItemIncrement(item=item,starting=0,current_price=0,state='active',instant_sell=20).save()
+        sell_type=request.POST['sell_type']
         try:
-            sell=SellItemDecrement(item=item,starting=0,current_price=100,state='active',period=10,stop_decrement=10,delta=10)
+            if(sell_type=='increment'):
+                print("increment")
+                sell=SellItemIncrement(item=item,starting=int(request.POST['starting_price']),state='active',instant_sell=int(request.POST['instant_sell']))
+            elif(sell_type=='decrement'):
+                print("decrement")
+                sell=SellItemDecrement(item=item,starting=0,current_price=100,state='active',period=10,stop_decrement=10,delta=10)
             sell.save()
             sell.start_auction()
-        except:
+        except Exception as e:
+            print(e)
             messages.add_message(request,messages.ERROR,message='Item is already in auction.')
         owned_items = Item.objects.filter(owner__id=request.user.id)
         print(owned_items)
