@@ -50,7 +50,7 @@ def list_items(request):
                 sell=SellItemIncrement(item=item,starting=int(request.POST['starting_price']),state='active',instant_sell=int(request.POST['instant_sell']))
             elif(sell_type=='decrement'):
                 print("decrement")
-                sell=SellItemDecrement(item=item,starting=0,current_price=100,state='active',period=10,stop_decrement=10,delta=10)
+                sell=SellItemDecrement(item=item,starting=int(request.POST['starting_price']),current_price=int(request.POST['starting_price']),state='active',period=int(request.POST['period']),stop_decrement=int(request.POST['stop_decrement']),delta=int(request.POST['delta']))
             sell.save()
             sell.start_auction()
         except Exception as e:
