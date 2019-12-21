@@ -23,6 +23,7 @@
             <div class="button-group">
                 <button onClick="toggleDisplay(document.getElementById('{{item.id}}') ,'decrement-form')">Sell Decrement</button>
                 <button onClick="toggleDisplay(document.getElementById('{{item.id}}'), 'increment-form')">Sell Increment</button>
+                <button onClick="toggleDisplay(document.getElementById('{{item.id}}'), 'instant-increment-form')">Sell Instant Increment</button>
             </div>
             <form class="decrement-form" style='display: none;' method="POST">
                 {% csrf_token %}
@@ -43,6 +44,16 @@
                     <input type="text" name="instant_sell" placeholder="instant sell">
                     <input type="hidden" name="item_id" value={{item.id}}>
                     <input type="hidden" name="sell_type" value='increment'>
+                </fieldset>
+            </form>
+            <form class="instant-increment-form" style='display: none;' method="POST">
+                {% csrf_token %}
+                <fieldset class="form-group">
+                    <input type="submit" value="Sell Instant Increment">
+                    <input type="text" name="starting_price" placeholder="starting price">
+                    <input type="text" name="instant_sell" placeholder="instant sell">
+                    <input type="hidden" name="item_id" value={{item.id}}>
+                    <input type="hidden" name="sell_type" value='instant-increment'>
                 </fieldset>
             </form>
 

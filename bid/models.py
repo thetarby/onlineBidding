@@ -1,4 +1,4 @@
-git stfrom django.db import models
+from django.db import models
 from django.contrib.auth.models import User
 from users.models import UserProfile
 import threading
@@ -92,7 +92,7 @@ class SellItemInstantIncrement(SellItem):
         if user.balance < amount:
             return('{} does not have {} in account'.format(user.name_surname, amount))
 
-        bidded_user = BiddedUser.objects.filter(bidded_user__id=user.id)
+        bidded_user = BiddedUser.objects.get(bidded_user__id=user.id)
         if not bidded_user:
             bidded_user = BiddedUser(bidded_user=user, bid=0)
             bidded_user.save()
@@ -113,7 +113,7 @@ class SellItemInstantIncrement(SellItem):
         #auto sell is reached
         if(self.total_bid>=self.current_price):
             self.sell()
-            print('{} is sold to {} with a total amount of {}'.format(self.title, user.name_surname, self.total_bid))
+            print('{} is sold to {} with a total amount of {}'.format(self.item.title, user.name_surname, self.total_bid))
         print('{} bidded {}'.format(user.name_surname, amount))
         self.save()
         return 1

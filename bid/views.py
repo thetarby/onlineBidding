@@ -26,10 +26,14 @@ def bid_screen(request,item_id):
         user=User.objects.all().filter(id=request.user.id).select_related('userprofile').first().userprofile
         item=int(request.POST['item_id'])
         if(hasattr(SellItem.objects.filter(state='active').get(item__id=item),'sellitemdecrement' )):
+            print('decrement bidding')
             SellItem.objects.filter(state='active').get(item__id=item).sellitemdecrement.bid(user,amount)
         elif(hasattr(SellItem.objects.filter(state='active').get(item__id=item),'sellitemincrement' )):
-            print('bidding')
+            print('increment bidding')
             SellItem.objects.filter(state='active').get(item__id=item).sellitemincrement.bid(user,amount)
+        elif(hasattr(SellItem.objects.filter(state='active').get(item__id=item),'selliteminstantincrement' )):
+            print('instant increment bidding')
+            SellItem.objects.filter(state='active').get(item__id=item).selliteminstantincrement.bid(user,amount)
         item=Item.objects.filter(id=item_id).first()
         context={
             'item':item

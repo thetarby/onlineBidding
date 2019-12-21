@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from .forms import UserRegisterForm 
 from .models import UserProfile
 from bid.views import Item
-from bid.models import SellItemIncrement,SellItemDecrement
+from bid.models import SellItemIncrement,SellItemDecrement, SellItemInstantIncrement
 
 # Create your views here.
 def register(request):
@@ -42,7 +42,6 @@ def list_items(request):
         return render(request,'users/list_items.html', context)
     if request.method=='POST':
         item=Item.objects.get(id=request.POST['item_id'])
-        #SellItemIncrement(item=item,starting=0,current_price=0,state='active',instant_sell=20).save()
         sell_type=request.POST['sell_type']
         try:
             if(sell_type=='increment'):
@@ -51,6 +50,9 @@ def list_items(request):
             elif(sell_type=='decrement'):
                 print("decrement")
                 sell=SellItemDecrement(item=item,starting=0,current_price=100,state='active',period=10,stop_decrement=10,delta=10)
+            elif(sell_type=='instant-increment'):
+                print("instant-increment")
+                sell=SellItemInstantIncrement(item=item,starting=int(request.POST['starting_price']),current_price=int(request.POST['instant_sell']),state='active', minbid=int(request.POST['starting_price']))
             sell.save()
             sell.start_auction()
         except Exception as e:
