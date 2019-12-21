@@ -14,7 +14,7 @@ def register(request):
             form.save() # hash password and save it to db
             username = form.cleaned_data['username']
             messages.success(request, 'Account created for {}'.format(username))
-            return redirect('users_app:home')
+            return redirect('login')
     else:
         form=UserRegisterForm()
     return render(request, 'users/register.html', {'form':form})
@@ -66,8 +66,4 @@ def add_item(request):
         item_type=request.POST['item_type']
         item = Item(title=title, description=description, owner=request.user.userprofile, item_type=item_type)
         item.save()
-        owned_items = Item.objects.filter(owner__id=request.user.id)
-        context = {
-            'owned_items': owned_items
-        }
-        return render(request,'users/list_items.html', context)
+        return redirect('users_app:list_items')
