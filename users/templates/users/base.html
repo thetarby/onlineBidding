@@ -34,6 +34,10 @@ body {
 
 
 <style>
+        .list-wrapper{
+            display: flex;
+            justify-content: center;
+        }
         .card .general span {
         position: absolute;
         bottom: 1rem;
@@ -61,12 +65,23 @@ body {
         overflow: hidden;
         position: relative;
         margin: 1.5rem;
+        display: inline-block;
+        transition-duration: 0.5s;
         }
+        .card form{
+            margin: 10px;
 
+        }
         .card h1 {
-        text-align: center;
+            margin:0;
+            text-align: center;
         }
-
+        .card .button-group{
+            display: flex;
+            justify-content: space-between;
+            position:relative;
+            bottom:0;
+        }
         .card .additional {
         position: absolute;
         width: 150px;
@@ -87,12 +102,20 @@ body {
         box-sizing: border-box;
         padding: 1rem;
         padding-top: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
         }
         .item-image{
         height: 100%;
         bottom: 0;
         display:flex;
         justify-content:center;
+        }
+        .item-image img{
+            height: 180px;
+             width: 150;
+            border-radius: 5px;
         }
         .item-image .item-price{
         bottom:0;

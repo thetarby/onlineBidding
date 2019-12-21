@@ -18,7 +18,9 @@ class UserProfile(models.Model):
         else:
             return 0
 
-
+    def add_balance(self,amount):# TODO: eksili balance eklemeye bak
+        self.balance+=amount
+        self.save()
 
     def buy(self,item,item_type,price):
         if price > self.balance+self.reserved:

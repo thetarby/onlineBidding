@@ -1,4 +1,4 @@
-from django.db import models
+git stfrom django.db import models
 from django.contrib.auth.models import User
 from users.models import UserProfile
 import threading
@@ -24,7 +24,7 @@ class Item(models.Model):
 
 
 class SellItem(models.Model):
-    item=models.OneToOneField(Item ,on_delete=models.CASCADE)
+    item=models.ForeignKey(Item ,on_delete=models.CASCADE)
     starting=models.FloatField(default=0)
     current_price=models.FloatField(default=0)
     state=models.CharField(max_length=15, default='inactive')
@@ -32,6 +32,7 @@ class SellItem(models.Model):
 
     def sell(self):
         self.highest_payer.buy(self.item,self.item.item_type,self.current_price)
+        self.item.owner.add_balance(self.current_price)
         self.state = 'sold'
         #self.history_['selling_price']=self.last_bid
         #self.watcher.notify(self)
@@ -42,6 +43,11 @@ class SellItem(models.Model):
 class SellItemIncrement(SellItem):
     instant_sell=models.FloatField(blank=False)
     min_delta=models.FloatField(default=0)
+    def start_auction(self):
+        self.state = 'active'
+        #self.watcher.notify(self.item_type)
+        #self.watcher.notify(self)
+        self.save()
     def bid(self, user, amount):
         print('AASDADASDASDŞLKASJDKLJASKLDJASLKDJKLSAJDKLASJ')
         if amount < self.current_price + self.min_delta:
@@ -50,8 +56,6 @@ class SellItemIncrement(SellItem):
             return('item is sold')
         if user.balance < amount:
             return('Cannot bid that much amount')
-        if self.state == 'active':
-            self.state = 'onhold'
         #    self.history_['start_price'] = amount
 
         old_user=self.highest_payer
@@ -191,7 +195,7 @@ class SellItemDecrement(SellItem):
             self.sell()
         #item state'i değiştiği içiin izleyenleri notify et
         #self.watcher.notify(self)
-
+        self.save()
         return 1
 
 
