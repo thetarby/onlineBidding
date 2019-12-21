@@ -2,17 +2,25 @@
 {% block content %}
     <h1>Items:</h1>
     {% for item in items %}
-        <div id={{item.id}} style='margin:50px; border:1px solid; width: 200px;'>
-            <p>{{ item.title }}</p>
-            <p>{{item.description}}</p>
-            <form method="POST">
-                {% csrf_token %}
-                <fieldset class="form-group">
-                    <legend class="border-bottom mb-4">Make A Bid</legend>
-                    <input type="text" name="amount" value="10">
-                    <input type="submit" value="Submit">
-                </fieldset>
-            </form>
+        <div id={{item.id}} class="card">
+            <div class="additional">
+            <div class="item-image">
+                <img src="" alt="Item Photo">
+                <div class="item-price">
+                    1300₺
+                </div>
+            </div>
+            </div>
+            <div class="general">
+            <div class="item-info">
+                <p class="left"> Owner: {{ item.owner.name_surname }}</p>
+                <p class="right">Type: {{ item.item_type }}</p>
+            </div>
+            <h1>{{ item.title }}</h1>
+            <p>{{ item.description }}</p>
+            <span>Click On Item to Go Auction Page</span>
+            </div>
+
         </div>
     {%endfor%}
     

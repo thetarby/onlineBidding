@@ -26,7 +26,6 @@ class UserProfile(models.Model):
         else:
             print('YARRAMI YEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEee')
             self.reserved -= price
-            item.state='sold'
             item.owner=self
             item.save()
             #self.owned_items[item_type].append(item.id)

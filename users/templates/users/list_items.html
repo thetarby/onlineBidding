@@ -1,10 +1,24 @@
 {% extends "users/base.html" %}
 {% block content %}
+
     <h1>Owned Items</h1>
     {% for item in owned_items %}
-    <div style='margin:50px; border:1px solid; width: 200px;'>
-        <p>{{ item.title }}</p>
-        <p>{{item.description}}</p>
+    <div id={{item.id}} class="card">
+        <div class="additional">
+        <div class="item-image">
+            <img src="" alt="Item Photo">
+            <div class="item-price">
+                1300₺
+            </div>
+        </div>
+        </div>
+        <div class="general">
+        <div class="item-info">
+            <p class="left"> Owner: {{ item.owner.name_surname }}</p>
+            <p class="right">Type: {{ item.item_type }}</p>
+        </div>
+        <h1>{{ item.title }}</h1>
+        <p>{{ item.description }}</p>
         <form method="POST">
             {% csrf_token %}
             <fieldset class="form-group">
@@ -12,7 +26,28 @@
                 <input type="hidden" name="item_id" value={{item.id}}>
             </fieldset>
         </form>
+        </div>
+
     </div>
     {%endfor%}
-
+    <form method="POST">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            <input type="submit" value="Sell Increment">
+            <input type="text" placeholder="starting price">
+            <input type="text" placeholder="instant sell">
+            <input type="text" placeholder="minunum delta">
+            <input type="hidden" name="item_id" value={{item.id}}>
+        </fieldset>
+    </form>
+    <form method="POST">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            <input type="submit" value="Sell Decrement">
+            <input type="text" placeholder="period">
+            <input type="text" placeholder="delta">
+            <input type="text" placeholder="stop decrement">
+            <input type="hidden" name="item_id" value={{item.id}}>
+        </fieldset>
+    </form>
 {% endblock %}

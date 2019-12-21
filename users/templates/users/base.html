@@ -31,6 +31,74 @@ body {
   background-color: #4CAF50;
   color: white;
 }
+
+
+<style>
+        .card .general span {
+        position: absolute;
+        bottom: 1rem;
+        right: 1rem;
+        font-size: 0.6em;
+        }
+        .item-info{
+            padding:10px;
+        }
+        .item-info .left{
+            float:left;
+            font-size: 0.6em;
+        }
+        .item-info .right{
+            float:right;
+            font-size: 0.6em;
+        }
+        .card {
+        width: 450px;
+        height: 200px;
+        background-color: #fff;
+        background: linear-gradient(#f8f8f8, #fff);
+        box-shadow: 0 8px 16px -8px rgba(0,0,0,0.4);
+        border-radius: 6px;
+        overflow: hidden;
+        position: relative;
+        margin: 1.5rem;
+        }
+
+        .card h1 {
+        text-align: center;
+        }
+
+        .card .additional {
+        position: absolute;
+        width: 150px;
+        height: 100%;
+        background: linear-gradient(#dE685E, #EE786E);
+        transition: width 0.4s;
+        overflow: hidden;
+        z-index: 2;
+        }
+
+        .card .general {
+        width: 300px;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        right: 0;
+        z-index: 1;
+        box-sizing: border-box;
+        padding: 1rem;
+        padding-top: 0;
+        }
+        .item-image{
+        height: 100%;
+        bottom: 0;
+        display:flex;
+        justify-content:center;
+        }
+        .item-image .item-price{
+        bottom:0;
+        position: absolute;
+        }
+    </style>
     </style>
 </head>
 <body>
@@ -44,6 +112,11 @@ body {
         <a style="float:right" href="/logout">Logout</a>,
 		<a style="float:right" href="/admin/">Admin</a>
     </div>
+    {% if messages %}
+        {%for message in messages%}
+            <strong>{{ message }}</strong>
+        {%endfor%}
+    {% endif %}
 {% block content %}{% endblock %}
 <script>
     if(window.location.pathname=='/home' || window.location.pathname=='/home/'){

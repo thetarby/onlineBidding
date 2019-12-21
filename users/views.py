@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from .forms import UserRegisterForm 
 from .models import UserProfile
 from bid.views import Item
-from bid.models import SellItemIncrement
+from bid.models import SellItemIncrement,SellItemDecrement
 
 # Create your views here.
 def register(request):
@@ -42,7 +42,13 @@ def list_items(request):
         return render(request,'users/list_items.html', context)
     if request.method=='POST':
         item=Item.objects.get(id=request.POST['item_id'])
-        SellItemIncrement(item=item,starting=0,current_price=0,state='active',instant_sell=20).save()
+        #SellItemIncrement(item=item,starting=0,current_price=0,state='active',instant_sell=20).save()
+        try:
+            sell=SellItemDecrement(item=item,starting=0,current_price=100,state='active',period=10,stop_decrement=10,delta=10)
+            sell.save()
+            sell.start_auction()
+        except:
+            messages.add_message(request,messages.ERROR,message='Item is already in auction.')
         owned_items = Item.objects.filter(owner__id=request.user.id)
         print(owned_items)
         context = {
