@@ -1,16 +1,29 @@
 from django.shortcuts import render
 from .models import SellItem,SellItemDecrement,SellItemIncrement,Item
 from django.contrib.auth.models import User
-
+from bid.models import WatchSell
 
 # Create your views here.
 def home(request):
-    sells=[sell for sell in SellItem.objects.filter(state='active')]
-    context={
-        'sells':sells
-    }
-    print(request)
-    return render(request,'bid/home.html',context)
+    if request.method=='GET':
+        sells=[sell for sell in SellItem.objects.filter(state='active')]
+        context={
+            'sells':sells
+        }
+        print(request)
+        return render(request,'bid/home.html',context)
+    else:
+        item_id = int(request.POST['item_id'])
+        sellitem = SellItem.objects.get(item__id=item_id)
+        WatchSell(user=request.user.userprofile, sell=sellitem).save()
+        sells=[sell for sell in SellItem.objects.filter(state='active')]
+        context={
+            'sells':sells,
+            'messages': ['Item is being watched.']
+        }
+        print(request)
+        return render(request,'bid/home.html',context)
+
 
 
 def bid_screen(request,item_id):

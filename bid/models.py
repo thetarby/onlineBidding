@@ -6,6 +6,9 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib import messages
 # Create your models here.sv
+
+
+
 class BiddedUser(models.Model):
     bidded_user=models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     bid=models.FloatField(default=0)
@@ -13,7 +16,6 @@ class BiddedUser(models.Model):
     def update_bid(self, amount):
         self.bid+=amount
         return self.save()
-
 
 
 class Item(models.Model):
@@ -205,11 +207,6 @@ class WatchSell(models.Model):
     sell=models.ForeignKey(SellItem,on_delete=models.CASCADE, null=False,blank=False)
 
 
-    def notify_wathers(self,sell):
-        for watch in WatchSell.objects.filter(sell_id=sell.id):
-            print(watch.user.name_surname + ' will be notified.')
-
-
 class WatchItemTypes(models.Model):
     user=models.ForeignKey(UserProfile,on_delete=models.CASCADE, null=False,blank=False)
     item_type=models.CharField(max_length=100,null=False, blank=False)
@@ -217,6 +214,7 @@ class WatchItemTypes(models.Model):
 
 @receiver(post_save, sender=SellItemIncrement)
 @receiver(post_save, sender=SellItemDecrement)
+@receiver(post_save, sender=SellItemInstantIncrement)
 def notify_item_type_wathers(sender, instance, **kwargs):
     for watch in WatchItemTypes.objects.filter(item_type=instance.item.item_type):
         print(watch.user.name_surname + ' will be notified.(item type watcher)')
@@ -224,8 +222,8 @@ def notify_item_type_wathers(sender, instance, **kwargs):
 
 @receiver(post_save, sender=SellItemIncrement)
 @receiver(post_save, sender=SellItemDecrement)
+@receiver(post_save, sender=SellItemInstantIncrement)
 def notify_sell_wathers(sender, instance, **kwargs):
     for watch in WatchSell.objects.filter(sell__id=instance.id):
         print(watch.user.name_surname + ' will be notified.(sell watcher)')
-
 

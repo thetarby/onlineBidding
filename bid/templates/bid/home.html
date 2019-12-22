@@ -19,6 +19,11 @@
             <h1>{{ sell.item.title }}</h1>
             <p>{{ sell.item.description }}</p>
             <span>Click On Item to Go Auction Page</span>
+            <form method="POST">
+                {% csrf_token %}
+                <input type="submit" value="Watch Item">
+                <input type="hidden" name="item_id" value={{sell.item.id}}>
+            </form>
             </div>
 
         </div>
