@@ -5,8 +5,16 @@ import threading
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib import messages
-
 # Create your models here.sv
+class BiddedUser(models.Model):
+    bidded_user=models.ForeignKey(UserProfile, on_delete=models.CASCADE)
+    bid=models.FloatField(default=0)
+
+    def update_bid(self, amount):
+        self.bid+=amount
+        return self.save()
+
+
 
 class Item(models.Model):
     title=models.CharField(max_length=100)
@@ -25,11 +33,11 @@ class SellItem(models.Model):
     def sell(self):
         self.highest_payer.buy(self.item,self.item.item_type,self.current_price)
         self.item.owner.add_balance(self.current_price)
+        # self.owner.item_sold(self)
         self.state = 'sold'
         #self.history_['selling_price']=self.last_bid
         #self.watcher.notify(self)
         self.save()
-        #self.owner.item_sold(self)
 
 
 class SellItemIncrement(SellItem):
@@ -65,6 +73,60 @@ class SellItemIncrement(SellItem):
         #self.watcher.notify(self)
         return 1
 
+
+class SellItemInstantIncrement(SellItem):
+    total_bid=models.FloatField(default=0)
+    minbid=models.FloatField(default=0)
+    last_bid=models.FloatField(default=0)
+
+    def start_auction(self):
+        self.state = 'active'
+        #self.watcher.notify(self.item_type)
+        #self.watcher.notify(self)
+        self.save()
+
+
+    def bid(self, user, amount):
+        if self.state == 'sold':
+            return('item is already sold')
+        if user.balance < amount:
+            return('{} does not have {} in account'.format(user.name_surname, amount))
+
+        bidded_user = BiddedUser.objects.get(bidded_user__id=user.id)
+        if not bidded_user:
+            bidded_user = BiddedUser(bidded_user=user, bid=0)
+            bidded_user.save()
+        
+        if amount<self.minbid or self.last_bid>=(bidded_user.bid+amount):
+            return('{} should bid more than {}'.format(user.name_surname, amount))
+        # if self.state == 'active':
+        #     self.state = 'onhold'
+        #     self.history_['start_price'] = amount
+
+        self.highest_payer = user
+        # self.history_['bid_history'].append((amount,user.email))
+        bidded_user.update_bid(amount)
+        self.last_bid=bidded_user.bid + amount
+        self.total_bid+=amount
+        user.reserve(amount)
+
+        #auto sell is reached
+        if(self.total_bid>=self.current_price):
+            self.sell()
+            print('{} is sold to {} with a total amount of {}'.format(self.item.title, user.name_surname, self.total_bid))
+        print('{} bidded {}'.format(user.name_surname, amount))
+        self.save()
+        return 1
+    
+
+    def sell(self):
+        self.highest_payer.buy(self.item,self.item.item_type,self.total_bid)
+        self.item.owner.add_balance(self.current_price)
+        self.state = 'sold'
+        #self.history_['selling_price']=self.last_bid
+        #self.watcher.notify(self)
+        self.save()
+        #self.owner.item_sold(self)
 
 class SellItemDecrement(SellItem):
     period=models.FloatField(blank=False)

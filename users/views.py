@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from .forms import UserRegisterForm 
 from .models import UserProfile
 from bid.views import Item
-from bid.models import SellItemIncrement,SellItemDecrement
+from bid.models import SellItemIncrement,SellItemDecrement, SellItemInstantIncrement
 
 # Create your views here.
 def register(request):
@@ -14,7 +14,7 @@ def register(request):
             form.save() # hash password and save it to db
             username = form.cleaned_data['username']
             messages.success(request, 'Account created for {}'.format(username))
-            return redirect('users_app:home')
+            return redirect('login')
     else:
         form=UserRegisterForm()
     return render(request, 'users/register.html', {'form':form})
@@ -23,6 +23,7 @@ def register(request):
 def user_profile(request):
     print(User.objects.all().filter(id=request.user.id).select_related('userprofile').first())
     user=User.objects.all().filter(id=request.user.id).select_related('userprofile').first().userprofile
+    print('LAAAAAAA {}'.format(user.name_surname))
     return render(request, 'users/user_profile.html', {'user':user})
 
 def home(request):
@@ -42,7 +43,6 @@ def list_items(request):
         return render(request,'users/list_items.html', context)
     if request.method=='POST':
         item=Item.objects.get(id=request.POST['item_id'])
-        #SellItemIncrement(item=item,starting=0,current_price=0,state='active',instant_sell=20).save()
         sell_type=request.POST['sell_type']
         try:
             if(sell_type=='increment'):
@@ -51,6 +51,9 @@ def list_items(request):
             elif(sell_type=='decrement'):
                 print("decrement")
                 sell=SellItemDecrement(item=item,starting=int(request.POST['starting_price']),current_price=int(request.POST['starting_price']),state='active',period=int(request.POST['period']),stop_decrement=int(request.POST['stop_decrement']),delta=int(request.POST['delta']))
+            elif(sell_type=='instant-increment'):
+                print("instant-increment")
+                sell=SellItemInstantIncrement(item=item,starting=int(request.POST['starting_price']),current_price=int(request.POST['instant_sell']),state='active', minbid=int(request.POST['starting_price']))
             sell.save()
             sell.start_auction()
         except Exception as e:
@@ -73,8 +76,4 @@ def add_item(request):
         item_type=request.POST['item_type']
         item = Item(title=title, description=description, owner=request.user.userprofile, item_type=item_type)
         item.save()
-        owned_items = Item.objects.filter(owner__id=request.user.id)
-        context = {
-            'owned_items': owned_items
-        }
-        return render(request,'users/list_items.html', context)
+        return redirect('users_app:list_items')
