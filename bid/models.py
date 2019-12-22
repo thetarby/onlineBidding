@@ -153,11 +153,18 @@ class WatchItemTypes(models.Model):
     item_type=models.CharField(max_length=100,null=False, blank=False)
 
 
+class Messages(models.Model):
+    user=models.ForeignKey(UserProfile,on_delete=models.CASCADE, null=False,blank=False)
+    message=models.TextField()
+
+
 @receiver(post_save, sender=SellItemIncrement)
 @receiver(post_save, sender=SellItemDecrement)
 def notify_item_type_wathers(sender, instance, **kwargs):
-    for watch in WatchItemTypes.objects.filter(item_type=instance.item.item_type):
+    for i,watch in enumerate(WatchItemTypes.objects.filter(item_type=instance.item.item_type)):
+        print(i)
         print(watch.user.name_surname + ' will be notified.(item type watcher)')
+        Messages(user=watch.user, message="A new {} item is on sale".format(watch.item_type)).save()
 
 
 @receiver(post_save, sender=SellItemIncrement)
@@ -165,3 +172,4 @@ def notify_item_type_wathers(sender, instance, **kwargs):
 def notify_sell_wathers(sender, instance, **kwargs):
     for watch in WatchSell.objects.filter(sell__id=instance.id):
         print(watch.user.name_surname + ' will be notified.(sell watcher)')
+        Messages(user=watch.user, message="There has been a change in {}".format(watch.sell.item.title)).save()

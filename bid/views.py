@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import SellItem,SellItemDecrement,SellItemIncrement,Item
+from .models import SellItem,SellItemDecrement,SellItemIncrement,Item,Messages
 from django.contrib.auth.models import User
 
 
@@ -12,6 +12,10 @@ def home(request):
     print(request)
     return render(request,'bid/home.html',context)
 
+
+def messages(request):
+    messages=[mes.message for mes in Messages.objects.filter(user__id=request.user.userprofile.id)]
+    return render(request, 'bid/messages.html', {'notification_messages':messages})
 
 def bid_screen(request,item_id):
     if request.method=='GET':
@@ -26,12 +30,13 @@ def bid_screen(request,item_id):
         user=User.objects.all().filter(id=request.user.id).select_related('userprofile').first().userprofile
         item=int(request.POST['item_id'])
         if(hasattr(SellItem.objects.filter(state='active').get(item__id=item),'sellitemdecrement' )):
-            SellItem.objects.filter(state='active').get(item__id=item).sellitemdecrement.bid(user,amount)
+            res=SellItem.objects.filter(state='active').get(item__id=item).sellitemdecrement.bid(user,amount)
         elif(hasattr(SellItem.objects.filter(state='active').get(item__id=item),'sellitemincrement' )):
             print('bidding')
-            SellItem.objects.filter(state='active').get(item__id=item).sellitemincrement.bid(user,amount)
+            res=SellItem.objects.filter(state='active').get(item__id=item).sellitemincrement.bid(user,amount)
         item=Item.objects.filter(id=item_id).first()
         context={
-            'item':item
+            'item':item,
+            'messages':['You bidded succesfully' if res==1 else res]
         }
         return render(request,'bid/bid_screen.html',context)

@@ -1,5 +1,6 @@
 <html>
 <head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
     /* Add a black background color to the top navigation */
 body {
@@ -67,6 +68,10 @@ body {
         margin: 1.5rem;
         display: inline-block;
         transition-duration: 0.5s;
+        transform: scale(1);
+        }
+        .card:hover{
+            transform: scale(1.1);
         }
         .card form{
             margin: 10px;
@@ -131,7 +136,7 @@ body {
         <a id="add-item-button" href="{% url 'users_app:add_item' %}">Add item</a>
         <a id="profile-button" href="{% url 'users-user-profile' %}">My Profile</a>
         <a id="list-items-button" href="{% url 'users_app:list_items' %}">List My Items</a>
-
+        <a id="messages-button" href="{% url 'bid_app:bid-messages' %}"><i style="font-size:20px" class="fa fa-bell"></i></a>
         <a style="float:right" href="/logout">Logout</a>,
 		<a style="float:right" href="/admin/">Admin</a>
     </div>
@@ -156,6 +161,9 @@ body {
     }
     else if(window.location.pathname=='/home/list_items/' || window.location.pathname=='/home/list_items'){
         document.getElementById("list-items-button").className+="active"
+    }
+    else if(window.location.pathname=='/bid/messages/' || window.location.pathname=='/bid/messages'){
+        document.getElementById("messages-button").className+="active"
     }
     console.log(window.location.pathname)
 </script>
