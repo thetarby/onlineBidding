@@ -7,7 +7,6 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     balance = models.FloatField(default=0)
     reserved = models.FloatField(default=0)
-    email = models.EmailField(max_length=150)
     name_surname= models.CharField(max_length=100, blank=True)
 
     def reserve(self,amount):
@@ -41,7 +40,7 @@ class UserProfile(models.Model):
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        UserProfile.objects.create(user=instance, email=instance.email, name_surname=instance.fullname)
+        UserProfile.objects.create(user=instance, name_surname=instance.fullname)
 
 
 @receiver(post_save, sender=User)

@@ -3,7 +3,7 @@
     <div class='user'>
         {% if user %}
             <p> Ad Soyad: {{ user.name_surname }}</p>
-            <p> Email: {{ user.email }}</p>
+            <p> Email: {{ user.user.email }}</p>
             <p> Bakiye: {{ user.balance }}</p>
         {%endif%}
     </div>
