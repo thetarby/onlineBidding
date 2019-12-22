@@ -62,26 +62,7 @@
         </div>
         {%endfor%}
     </div>
-    <form method="POST">
-        {% csrf_token %}
-        <fieldset class="form-group">
-            <input type="submit" value="Sell Increment">
-            <input type="text" placeholder="starting price">
-            <input type="text" placeholder="instant sell">
-            <input type="text" placeholder="minunum delta">
-            <input type="hidden" name="item_id" value={{item.id}}>
-        </fieldset>
-    </form>
-    <form method="POST">
-        {% csrf_token %}
-        <fieldset class="form-group">
-            <input type="submit" value="Sell Decrement">
-            <input type="text" placeholder="period">
-            <input type="text" placeholder="delta">
-            <input type="text" placeholder="stop decrement">
-            <input type="hidden" name="item_id" value={{item.id}}>
-        </fieldset>
-    </form>
+
     <script>
         function toggleDisplay(el,className) {
             console.log(className)
