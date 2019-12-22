@@ -23,6 +23,7 @@ def register(request):
 def user_profile(request):
     print(User.objects.all().filter(id=request.user.id).select_related('userprofile').first())
     user=User.objects.all().filter(id=request.user.id).select_related('userprofile').first().userprofile
+    print('LAAAAAAA {}'.format(user.name_surname))
     return render(request, 'users/user_profile.html', {'user':user})
 
 def home(request):

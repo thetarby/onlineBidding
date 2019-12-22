@@ -33,11 +33,11 @@ class SellItem(models.Model):
     def sell(self):
         self.highest_payer.buy(self.item,self.item.item_type,self.current_price)
         self.item.owner.add_balance(self.current_price)
+        # self.owner.item_sold(self)
         self.state = 'sold'
         #self.history_['selling_price']=self.last_bid
         #self.watcher.notify(self)
         self.save()
-        #self.owner.item_sold(self)
 
 
 class SellItemIncrement(SellItem):
@@ -121,6 +121,7 @@ class SellItemInstantIncrement(SellItem):
 
     def sell(self):
         self.highest_payer.buy(self.item,self.item.item_type,self.total_bid)
+        self.item.owner.add_balance(self.current_price)
         self.state = 'sold'
         #self.history_['selling_price']=self.last_bid
         #self.watcher.notify(self)
