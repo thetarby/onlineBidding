@@ -1,0 +1,55 @@
+{% extends "users/base.html" %}
+{% block content %}
+    <h1>Current Auctions:</h1>
+    {% for sell in sells %}
+        <div id={{sell.item.id}} class="card">
+            <div class="additional">
+                <div class="item-image">
+                    <img src="https://www.dhresource.com/600x600/f2/albu/g7/M01/D3/91/rBVaSVrsd5aAA5isAAMVt25ugBc771.jpg" alt="Item Photo">
+                    <div class="item-price">
+                        {{sell.current_price}}₺
+                    </div>
+                </div>
+            </div>
+            <div class="general">
+                <div class="item-info">
+                    <p class="left"> Owner: {{ sell.item.owner.name_surname }}</p>
+                    <p class="right">Type: {{ sell.item.item_type }}</p>
+                </div>
+                <h1>{{ sell.item.title }}</h1>
+                <p>{{ sell.item.description }}</p>
+                <span>Click On Item to Go Auction Page</span>
+            </div>
+
+        </div>
+    {%endfor%}
+    
+    {% for sell in sells %}
+        <script type="text/javascript">
+            document.getElementById({{sell.item.id}}).onclick = function () {
+                location.href = "./bidding/"+{{sell.item.id}};
+            };
+            
+        </script>
+
+
+    {%endfor%}
+
+    <script>
+    
+
+var chatSocket = new WebSocket(
+    'ws://' + window.location.host +
+    '/ws/time');
+
+chatSocket.onmessage = function(e) {
+    var data = JSON.parse(e.data);
+    var message = data['message'];
+    console.log(message)
+};
+
+chatSocket.onclose = function(e) {
+    console.error('Chat socket closed unexpectedly');
+};
+</script>
+{% endblock %}
