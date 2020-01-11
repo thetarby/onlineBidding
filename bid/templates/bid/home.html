@@ -5,7 +5,7 @@
         <div id={{sell.item.id}} class="card">
             <div class="additional">
             <div class="item-image">
-                <img src="" alt="Item Photo">
+                <img src="https://www.dhresource.com/600x600/f2/albu/g7/M01/D3/91/rBVaSVrsd5aAA5isAAMVt25ugBc771.jpg" alt="Item Photo">
                 <div class="item-price">
                     {{sell.current_price}}₺
                 </div>
@@ -21,7 +21,7 @@
             <span>Click On Item to Go Auction Page</span>
             <form method="POST">
                 {% csrf_token %}
-                <input type="submit" value="Watch Item">
+                <input type="submit" class="btn btn-success" value="Watch Item">
                 <input type="hidden" name="item_id" value={{sell.item.id}}>
             </form>
             </div>

@@ -9,7 +9,6 @@
             <div class="item-image">
                 <img src="https://www.dhresource.com/600x600/f2/albu/g7/M01/D3/91/rBVaSVrsd5aAA5isAAMVt25ugBc771.jpg" alt="Item Photo">
                 <div class="item-price">
-                    1300₺
                 </div>
             </div>
             </div>
@@ -20,15 +19,16 @@
             </div>
             <h1>{{ item.title }}</h1>
             <p>{{ item.description }}</p>
-            <div class="button-group">
-                <button onClick="toggleDisplay(document.getElementById('{{item.id}}') ,'decrement-form')">Sell Decrement</button>
-                <button onClick="toggleDisplay(document.getElementById('{{item.id}}'), 'increment-form')">Sell Increment</button>
-                <button onClick="toggleDisplay(document.getElementById('{{item.id}}'), 'instant-increment-form')">Sell Instant Increment</button>
+            <div class="btn-group">
+                <button class="btn btn-success" onClick="toggleDisplay(document.getElementById('{{item.id}}') ,'decrement-form')">Decrement</button>
+                <button class="btn btn-success" onClick="toggleDisplay(document.getElementById('{{item.id}}'), 'increment-form')">Increment</button>
+                <button class="btn btn-success" onClick="toggleDisplay(document.getElementById('{{item.id}}'), 'instant-increment-form')">Instant</button>
             </div>
             <form class="decrement-form" style='display: none;' method="POST">
                 {% csrf_token %}
                 <fieldset class="form-group">
                     <input type="submit" value="Sell Decrement">
+                    <input type="text" name="starting_price" placeholder="starting price">
                     <input type="text" name="period" placeholder="period">
                     <input type="text" name="delta" placeholder="delta">
                     <input type="text" name="stop_decrement" placeholder="stop decrement">
@@ -68,7 +68,7 @@
             console.log(className)
             var old=el.getElementsByClassName(className)[0].style.display
             el.getElementsByClassName(className)[0].style.display = old=='none' ? 'block' : 'none'
-            el.style.height = old=='none' ? '300px' : '200px'
+            el.style.height = old=='none' ? '350px' : '200px'
         }
         
     </script>

@@ -1,15 +1,16 @@
 {% extends "users/base.html" %}
 {% block content %}
-<p>{% if message %}
-   <strong>{{ message }}</strong>
-   {% endif %}
-</p>
 
-<ul>
-    <li><a href="{% url 'bid_app:bid-home' %}">View Auction Page</a></li>
-    <li><a href="{% url 'users_app:add_item' %}">Add item</a></li>
-    <li><a href="{% url 'users_app:list_items' %}">List my items</a></li>
-</ul>
+<div style='margin:50px; border:1px solid; width: 200px;'>
+    <form method="POST">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Watch an Item Type</legend>
+            <input type="text" name="item_type" placeholder="Item type">
+            <input type="submit" value="Watch">
+        </fieldset>
+    </form>
+</div>
 
 
 {% endblock %}

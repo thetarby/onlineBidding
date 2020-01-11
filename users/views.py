@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from .forms import UserRegisterForm 
 from .models import UserProfile
 from bid.views import Item
-from bid.models import SellItemIncrement,SellItemDecrement, SellItemInstantIncrement
+from bid.models import SellItemIncrement,SellItemDecrement, SellItemInstantIncrement, WatchItemTypes
 
 # Create your views here.
 def register(request):
@@ -26,15 +26,31 @@ def user_profile(request):
     return render(request, 'users/user_profile.html', {'user':user})
 
 def home(request):
-    context = {
-        'username': request.user.username 
-    }
-    return render(request,'users/home.html', context)
-
+    if request.method == 'GET':
+        context = {
+            'username': request.user.username 
+        }
+        return render(request,'users/home.html', context)
+    else:
+        item_type = request.POST['item_type']
+        userprofile = request.user.userprofile
+        if not WatchItemTypes.objects.filter(user__id=userprofile.id, item_type=item_type):
+            WatchItemTypes(user=userprofile, item_type=item_type).save()
+            context = {
+                'item_type': item_type,
+                'messages': ['item type is being watched']
+            }
+            return render(request,'users/home.html', context)
+        else:
+            context = {
+                'item_type': item_type,
+                'messages': ['item type is already being watched']
+            }
+            return render(request,'users/home.html', context)
 
 def list_items(request):
     if request.method=='GET':
-        owned_items = Item.objects.filter(owner__id=request.user.id)
+        owned_items = Item.objects.filter(owner__id=request.user.userprofile.id)
         context = {
             'owned_items': owned_items
         }
@@ -48,7 +64,7 @@ def list_items(request):
                 sell=SellItemIncrement(item=item,starting=int(request.POST['starting_price']),state='active',instant_sell=int(request.POST['instant_sell']))
             elif(sell_type=='decrement'):
                 print("decrement")
-                sell=SellItemDecrement(item=item,starting=0,current_price=100,state='active',period=10,stop_decrement=10,delta=10)
+                sell=SellItemDecrement(item=item,starting=int(request.POST['starting_price']),current_price=int(request.POST['starting_price']),state='active',period=int(request.POST['period']),stop_decrement=int(request.POST['stop_decrement']),delta=int(request.POST['delta']))
             elif(sell_type=='instant-increment'):
                 print("instant-increment")
                 sell=SellItemInstantIncrement(item=item,starting=int(request.POST['starting_price']),current_price=int(request.POST['instant_sell']),state='active', minbid=int(request.POST['starting_price']))
@@ -57,7 +73,7 @@ def list_items(request):
         except Exception as e:
             print(e)
             messages.add_message(request,messages.ERROR,message='Item is already in auction.')
-        owned_items = Item.objects.filter(owner__id=request.user.id)
+        owned_items = Item.objects.filter(owner__id=request.user.userprofile.id)
         print(owned_items)
         context = {
             'owned_items': owned_items
@@ -72,6 +88,6 @@ def add_item(request):
         title=request.POST['title']
         description=request.POST['description']
         item_type=request.POST['item_type']
-        item = Item(title=title, description=description, owner=request.user, item_type=item_type)
+        item = Item(title=title, description=description, owner=request.user.userprofile, item_type=item_type)
         item.save()
         return redirect('users_app:list_items')
