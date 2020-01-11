@@ -31,6 +31,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'channels',
     'users.apps.UsersConfig',
     'bid.apps.BidConfig',
@@ -50,6 +51,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'online_bidding.urls'
@@ -126,3 +129,14 @@ LOGIN_REDIRECT_URL = '/home'
 
 # Channels
 ASGI_APPLICATION = 'online_bidding.routing.application'
+
+#CORS
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000',
+]
+CORS_ORIGIN_REGEX_WHITELIST = [
+    'http://localhost:3000',
+]

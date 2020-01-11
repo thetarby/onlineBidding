@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.db import transaction
+
 # Create your models here.
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -9,6 +11,7 @@ class UserProfile(models.Model):
     reserved = models.FloatField(default=0)
     name_surname= models.CharField(max_length=100, blank=True)
 
+    @transaction.atomic
     def reserve(self,amount):
         if self.balance>=amount:
             self.balance-=amount
@@ -18,19 +21,19 @@ class UserProfile(models.Model):
         else:
             return 0
 
-    def add_balance(self,amount):# TODO: eksili balance eklemeye bak
+    def add_balance(self,amount):
         new_balance = self.balance + amount
         if new_balance < 0:
             print('You cannot withdraw {}'.format(amount))
         else:
-            self.balance+=amount
+            print('NEW BALANCE {}'.format(new_balance))
+            self.balance = new_balance
             self.save()
 
     def buy(self,item,item_type,price):
         if price > self.balance+self.reserved:
             print('Not enough money to buy')
         else:
-            print('YARRAMI YEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEee')
             self.reserved -= price
             item.owner=self
             item.save()

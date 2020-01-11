@@ -36,8 +36,33 @@
     transform: rotate(360deg);
   }
 }
-
-
+input,textarea {
+	padding: 15px;
+  border: 0;
+  border-bottom: 2px solid grey;
+  margin-bottom: 10px !important;
+  margin-top: 10px !important;
+	width: 80%;
+	box-sizing: border-box;
+	font-family: montserrat;
+	color: #2C3E50;
+  font-size: 13px;
+  height: 10px;
+  margin: auto;
+}
+.form{
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  text-align: center;
+}
+.btn{
+  font-size:15px !important;
+}
+.btn-group{
+  width: 100%;
+}
 .topnav {
   background-color: #333;
   overflow: hidden;
@@ -66,7 +91,8 @@
 }
 .list-wrapper{
   display: flex;
-  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 .card .general span {
 position: absolute;
@@ -86,6 +112,7 @@ font-size: 0.6em;
   font-size: 0.6em;
 }
 .card {
+  
 width: 450px;
 height: 200px;
 background-color: #fff;
@@ -102,6 +129,14 @@ transform: scale(1);
 .card:hover{
   transform: scale(1.1);
 }
+.card:hover img{
+  transform: scale(1.2);
+}
+img{
+  transition-duration: 1s;
+  transform: scale(1);
+}
+
 .card form{
   margin: 10px;
 

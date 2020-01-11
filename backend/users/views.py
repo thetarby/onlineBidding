@@ -5,8 +5,18 @@ from .forms import UserRegisterForm
 from .models import UserProfile
 from bid.views import Item
 from bid.models import SellItemIncrement,SellItemDecrement, SellItemInstantIncrement
+from online_bidding.serializers import *
+from django.views.decorators.csrf import ensure_csrf_cookie
+import json
+
 
 # Create your views here.
+@ensure_csrf_cookie
+def set_csrf(request):
+    return 
+    
+
+
 def register(request):
     if request.method== 'POST': 
         form=UserRegisterForm(request.POST)
@@ -21,10 +31,9 @@ def register(request):
 
 
 def user_profile(request):
-    print(User.objects.all().filter(id=request.user.id).select_related('userprofile').first())
     user=User.objects.all().filter(id=request.user.id).select_related('userprofile').first().userprofile
-    print('LAAAAAAA {}'.format(user.name_surname))
-    return render(request, 'users/user_profile.html', {'user':user})
+    print(user_profile_serializer(user))
+    return(success(user_profile_serializer(user), 'data'))
 
 def home(request):
     context = {
@@ -71,9 +80,11 @@ def add_item(request):
     if request.method=='GET':
         return render(request,'users/add_item.html')
     else:
-        title=request.POST['title']
-        description=request.POST['description']
-        item_type=request.POST['item_type']
+        body=json.loads(request.body)
+        print(body)
+        title=body['title']
+        description=body['description']
+        item_type=body['item_type']
         item = Item(title=title, description=description, owner=request.user.userprofile, item_type=item_type)
         item.save()
         return redirect('users_app:list_items')

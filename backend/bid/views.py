@@ -1,47 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import SellItem,SellItemDecrement,SellItemIncrement,Item,Messages
+from .models import SellItem,SellItemDecrement,SellItemIncrement,Item,Messages,WatchItemTypes,WatchSell
 from django.contrib.auth.models import User
 import json
 from django.core import serializers
-#serializers
-def user_profile_serializer(item):
-    r = {}
-    for i in ['balance','reserved','name_surname']:
-        r[i] = getattr(item,i)
-    return r
-def item_serializer(item):
-    r = {}
-    for i in ['id','title','description','item_type']:
-        r[i] = getattr(item,i)
-    r['owner']=user_profile_serializer(item.owner)
-    return r
-def sell_serializer(sells):
-    r = []
-    for sell in sells:
-        d={}
-        for i in ['starting','current_price','state']:
-            d[i] = getattr(sell,i)
-        d['item'] = item_serializer(sell.item)
-        r.append(d)
-    return r
-
-
+from online_bidding.serializers import *
 
 # Create your views here.
 
-
-# Function: success(obj,name)
-# Return a successfull result in JSON httpresponse
-def success(obj, name):
-	return HttpResponse(json.dumps({'result':'Success',name : obj}),
-				'text/json')
-
-# Function: error(reason)
-# Return a successfull result in JSON
-def error(reason):
-	return HttpResponse(json.dumps({'result':'Fail','reason' : reason}),
-				'text/json')
 
 def test(request):
     print(request.user)
@@ -57,10 +23,57 @@ def home(request):
     return render(request,'bid/home.html',context)
 
 
-def messages(request):
-    messages=[mes.message for mes in Messages.objects.filter(user__id=request.user.userprofile.id)]
-    return render(request, 'bid/messages.html', {'notification_messages':messages})
+def list_items(request):
+    owned_items = Item.objects.filter(owner__id=request.user.id)
+    owned_items=[item_serializer(item) for item in owned_items]
+    return(success(owned_items, 'data'))
 
+
+def sell_item(request):
+    body=json.loads(request.body)
+    item=Item.objects.get(id=body['item_id'])
+    sell_type=body['sell_type']
+    try:
+        if(sell_type=='increment'):
+            print("increment")
+            sell=SellItemIncrement(item=item,starting=int(body['starting_price']),state='active',instant_sell=int(body['instant_sell']))
+        elif(sell_type=='decrement'):
+            print("decrement")
+            sell=SellItemDecrement(item=item,starting=int(body['starting_price']),current_price=int(body['starting_price']),state='active',period=int(body['period']),stop_decrement=int(body['stop_decrement']),delta=int(body['delta']))
+        elif(sell_type=='instant-increment'):
+            print("instant-increment")
+            sell=SellItemInstantIncrement(item=item,starting=int(body['starting_price']),current_price=int(body['instant_sell']),state='active', minbid=int(body['starting_price']))
+        sell.save()
+        sell.start_auction()
+    except Exception as e:
+        print(e)
+        messages.add_message(request,messages.ERROR,message='Item is already in auction.')
+    return(success({}, 'data'))
+
+
+def sell_history(request):
+    pass
+
+
+def register_to_watch_item_type(request,type):
+    try:
+        #body=json.loads(request.body)
+        WatchItemTypes.objects.create(user=request.user.userprofile, item_type=type)
+        return(success({}, 'data'))
+    except Exception as e:
+        return(error(str(e))) 
+
+
+def messages(request):
+    try:
+        messages=Messages.objects.all().filter(user=request.user.userprofile)
+        messages=[x.message for x in messages]
+        return(success(messages, 'data'))
+    except Exception as e:
+        return(error(str(e))) 
+
+
+#this function not necessary for phase4 but to test phase3 it is neeeded
 def bid_screen(request,item_id):
     if request.method=='GET':
         item=Item.objects.filter(id=item_id).first()
@@ -70,9 +83,10 @@ def bid_screen(request,item_id):
         }
         return render(request,'bid/bid_screen.html',context)
     else:
-        amount=int(request.POST['amount'])
+        body=json.loads(request.body)
+        amount=int(body['amount'])
         user=User.objects.all().filter(id=request.user.id).select_related('userprofile').first().userprofile
-        item=int(request.POST['item_id'])
+        item=int(body['item_id'])
         if(hasattr(SellItem.objects.filter(state='active').get(item__id=item),'sellitemdecrement' )):
             print('decrement bidding')
             res=SellItem.objects.filter(state='active').get(item__id=item).sellitemdecrement.bid(user,amount)

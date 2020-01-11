@@ -6,4 +6,5 @@ urlpatterns=[
     path('',views.home,name='home'),
     path('list_items/',views.list_items,name='list_items'),
     path('add_item/',views.add_item,name='add_item'),
+    path('deneme/',views.set_csrf,name='asda'),
 ]
