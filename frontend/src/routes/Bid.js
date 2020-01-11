@@ -51,7 +51,9 @@ export default class Bid extends React.Component {
         // get a callback when the server responds
         xhr.addEventListener('load', () => {
           // update the state of the component with the result here
-          this.setState({sells:JSON.parse(xhr.responseText)['data']})
+          if (JSON.parse(xhr.responseText)['data'].filter((d)=> this.state.selected_item_id==d.id).length==0) this.setState({selected_item_id:'', sells:JSON.parse(xhr.responseText)['data']})
+          else this.setState({sells:JSON.parse(xhr.responseText)['data']})
+
         })
         // open the request with the verb and the url
         xhr.open('GET', 'http://localhost:8000/bid/test/')

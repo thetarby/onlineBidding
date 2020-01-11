@@ -119,14 +119,14 @@ class App extends React.Component {
             
                 <Router>
                     <div class="topnav">
-                        <Link className={'nav-button'} id={"home-button"} onClick={(e)=>this.clickHandler(e)} to="./bid">Home</Link>
-                        <Link className={'nav-button'} id={"add-button"} onClick={(e)=>this.clickHandler(e)} to="./add-item">Add Item</Link>
-                        <Link className={'nav-button'} id={"profile-button"} onClick={(e)=>this.clickHandler(e)} to="./profile">My Profile</Link>
-                        <Link className={'nav-button'} id={"list-button"} onClick={(e)=>this.clickHandler(e)} to="./list-items">List My Items</Link>
-                        <Link className={'nav-button'} id={"message-button"} onClick={(e)=>this.clickHandler(e)} to="./messages"><i style={{fontSize:"20px", color:this.state.isMessage ? "red":"gold"}} className={"fa fa-bell"}></i></Link>
+                        <Link className={'nav-button'} id={"home-button"} onClick={(e)=>this.clickHandler(e)} to="/bid">Home</Link>
+                        <Link className={'nav-button'} id={"add-button"} onClick={(e)=>this.clickHandler(e)} to="/add-item">Add Item</Link>
+                        <Link className={'nav-button'} id={"profile-button"} onClick={(e)=>this.clickHandler(e)} to="/profile">My Profile</Link>
+                        <Link className={'nav-button'} id={"list-button"} onClick={(e)=>this.clickHandler(e)} to="/list-items">List My Items</Link>
+                        <Link className={'nav-button'} id={"message-button"} onClick={(e)=>this.clickHandler(e)} to="/messages"><i style={{fontSize:"20px", color:this.state.isMessage ? "red":"gold"}} className={"fa fa-bell"}></i></Link>
 
-                        <Link className={'nav-button'} id={"logout-button"} onClick={(e)=>this.clickHandler(e)} style={{float:"right"}} to="./profile">Logout</Link>
-                        <Link className={'nav-button'} id={"admin-button"} onClick={(e)=>this.clickHandler(e)} style={{float:"right"}} to="./profile">Admin</Link>
+                        <Link className={'nav-button'} id={"logout-button"} onClick={(e)=>this.clickHandler(e)} style={{float:"right"}} to="/profile">Logout</Link>
+                        <Link className={'nav-button'} id={"admin-button"} onClick={(e)=>this.clickHandler(e)} style={{float:"right"}} to="/profile">Admin</Link>
                     </div>
                     <Route path = "/bid" component ={Bid}></Route>
                     <Route path = "/login" component ={Login}></Route>

@@ -15,7 +15,8 @@ import json
 def set_csrf(request):
     return 
     
-
+def index(request):
+    return render(request, "build/index.html")
 
 def register(request):
     if request.method== 'POST': 

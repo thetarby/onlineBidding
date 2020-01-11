@@ -109,7 +109,6 @@ def bid_screen(request,item_id):
             res=SellItem.objects.filter(state='active').get(item__id=item).selliteminstantincrement.bid(user,amount)
         item=Item.objects.filter(id=item_id).first()
         context={
-            'item':item,
             'messages':['You bidded succesfully' if res==1 else res]
         }
-        return render(request,'bid/bid_screen.html',context)
+        return success(context, 'data')
