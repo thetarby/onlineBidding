@@ -7,6 +7,7 @@ from django.dispatch import receiver
 from django.contrib import messages
 from django.db import transaction
 import time
+from bid.consumers import MessageConsumer
 # Create your models here.sv
 
 class Item(models.Model):

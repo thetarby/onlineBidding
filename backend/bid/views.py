@@ -64,6 +64,17 @@ def register_to_watch_item_type(request,type):
         return(error(str(e))) 
 
 
+def register_to_watch_sell(request):
+    try:
+        body=json.loads(request.body)
+        sell=SellItem.objects.get(id=body['item_id'])
+        print(sell)
+        WatchSell.objects.create(user=request.user.userprofile, sell=sell)
+        return(success({}, 'data'))
+    except Exception as e:
+        return(error(str(e)))         
+
+
 def messages(request):
     try:
         messages=Messages.objects.all().filter(user=request.user.userprofile)

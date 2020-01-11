@@ -58,9 +58,63 @@ export default class Bid extends React.Component {
         // send the request
         xhr.send()
     }
+    watchItem(item_id){
+        var request = new Request(
+            'http://localhost:8000/bid/watch-sell/',
+            {headers: {'X-CSRFToken': this.getCookie('csrftoken')}}
+        );
+        var data = {
+            csrfmiddlewaretoken:this.getCookie('csrftoken'),
+            item_id:item_id
+        };
+        var thisOfClass=this;
+        fetch(request, {
+            method: 'POST',
+            mode: 'same-origin',  // Do not send CSRF token to another domain.
+            body: JSON.stringify(data)
+        }).then(function(response) {
+            return (response.json())
+        }).then(function(json){
+            console.log(json)
+        })
+    }
+    sendBidReq(){
+        var request = new Request(
+            'http://localhost:8000/bid/bidding/1',
+            {headers: {'X-CSRFToken': this.getCookie('csrftoken')}}
+        );
+        var data = {
+            csrfmiddlewaretoken:this.getCookie('csrftoken')
+        };
+        var el=document.getElementById('form-send-bid')
+        var htmlCol=el.children
+        for(var i=1; i<htmlCol.length-1;i++){
+            data[htmlCol[i].name]=htmlCol[i].value
+        }
+        var thisOfClass=this;
+        fetch(request, {
+            method: 'POST',
+            mode: 'same-origin',  // Do not send CSRF token to another domain.
+            body: JSON.stringify(data)
+        }).then(function(response) {
+            return (response.json())
+        }).then(function(json){
+            console.log(json)
+        })
+
+    }
     clickHandler(e){
-        console.log(e.currentTarget.id)
-        this.setState({selected_item_id:e.currentTarget.id})
+        console.log(e)
+        if(e==='bid'){
+            this.sendBidReq()
+        }
+        else if(e.target.className==='fa fa-bell'){
+            this.watchItem(e.currentTarget.id)
+            console.log('dasdjkas')
+        }
+        else{
+            this.setState({selected_item_id:e.currentTarget.id})
+        }
     }
     getCookie(name) {
         var cookieValue = null;
@@ -83,9 +137,11 @@ export default class Bid extends React.Component {
                     <h1>Current Auctions:</h1>
                     {
                         this.state.sells.map((sell)=>
-                            <div onClick={(e)=>this.clickHandler(e)} id={sell.item.id} className={"card"}>
+                            <div onClick={(e)=>this.clickHandler(e)} id={sell.id} className={"card"}>
                                 <div className={"additional"}>
                                     <div className={"item-image"}>
+                                        <i className={"fa fa-bell"}></i>
+
                                         <img src={"https://www.dhresource.com/600x600/f2/albu/g7/M01/D3/91/rBVaSVrsd5aAA5isAAMVt25ugBc771.jpg"} alt={"Item Photo"}></img>
                                         <div className={"item-price"}>
                                             {sell.current_price}₺
@@ -110,7 +166,7 @@ export default class Bid extends React.Component {
               );
         }
         else{
-            var sell=this.state.sells.filter((d)=> d.item.id==this.state.selected_item_id)[0]
+            var sell=this.state.sells.filter((d)=> d.id==this.state.selected_item_id)[0]
             var csrftoken = this.getCookie('csrftoken');
             return(
                 <div>
@@ -120,17 +176,14 @@ export default class Bid extends React.Component {
                         <p>{sell.item.description}</p>
                         <p>{sell.item.item_type}</p>
                         <p>{sell.current_price}</p>
-                        <form action={"http://localhost:8000/bid/bidding/1"} method={"POST"} target={'my_iframe'}>
-                            { /* {% csrf_token %} */ }
-                            <input type="hidden" name="csrfmiddlewaretoken" value={csrftoken} />
-                            <fieldset className={"form-group"}>
-                                <legend className={"border-bottom mb-4"}>Make A Bid</legend>
-                                <input type={"text"} name={"amount"} placeholder={"0"}></input>
-                                <input type={"hidden"} name={"item_id"} value={sell.item.id}></input>
-                                <input type={"submit"} value={"Submit"}></input>
-                            </fieldset>
-                        </form>
-                        <iframe id="iframe" name="my_iframe" type="hidden"></iframe>
+                        { /* {% csrf_token %} */ }
+                        <input type="hidden" name="csrfmiddlewaretoken" value={csrftoken} />
+                        <fieldset id='form-send-bid' className={"form-group"}>
+                            <legend className={"border-bottom mb-4"}>Make A Bid</legend>
+                            <input type={"text"} name={"amount"} placeholder={"0"}></input>
+                            <input type={"hidden"} name={"item_id"} value={sell.item.id}></input>
+                            <button className="btn" onClick={()=>this.clickHandler('bid')}>Bid!</button>
+                        </fieldset>
                     </div>
 
 

@@ -111,6 +111,20 @@ font-size: 0.6em;
   float:right;
   font-size: 0.6em;
 }
+.card i{
+  background-color: rgba(255, 255, 255, 0.2);
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: 1;
+  font-size: 20px;
+  color: gold;
+  padding: 5px;
+  transition-duration: 0.5s;
+}
+.card i:hover{
+  background-color: rgba(255,255,255,0.8);
+}
 .card {
   
 width: 450px;

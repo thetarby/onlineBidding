@@ -16,7 +16,7 @@ def sell_serializer(sells):
     r = []
     for sell in sells:
         d={}
-        for i in ['starting','current_price','state']:
+        for i in ['id','starting','current_price','state']:
             d[i] = getattr(sell,i)
         d['item'] = item_serializer(sell.item)
         r.append(d)

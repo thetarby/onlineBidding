@@ -6,7 +6,7 @@ import time
 x=0
 t = threading.Timer(5, lambda x:x+1, args=(x,))
 t.start()
-class ChatConsumer(WebsocketConsumer):
+class MessageConsumer(WebsocketConsumer):
     def connect(self):
         self.accept()
         self.t = threading.Timer(5, self.receive)
