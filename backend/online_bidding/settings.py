@@ -143,3 +143,12 @@ CORS_ORIGIN_WHITELIST = [
 CORS_ORIGIN_REGEX_WHITELIST = [
     'http://localhost:3000',
 ]
+
+EMAIL_HOST='smtp.gmail.com'
+EMAIL_HOST_USER='patates.puresi33@gmail.com'
+EMAIL_HOST_PASSWORD='ramazan.tatar20'
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+
+DEFAULT_FROM_EMAIL='Activation'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

@@ -8,4 +8,5 @@ urlpatterns=[
     path('add_item/',views.add_item,name='add_item'),
     path('deneme/',views.set_csrf,name='asda'),
     path('index/',views.index,name='index'),
+    path('activate/<slug:uidb64>/<slug:token>)/', views.activate, name='activate'),
 ]
