@@ -31,7 +31,6 @@ def register(request):
         form=UserRegisterForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False) # hash password and save it to db
-            print(form.cleaned_data)
             username = form.cleaned_data['username']
             user.email = form.cleaned_data['email']
             user.set_password(form.cleaned_data['password1'])
@@ -130,3 +129,26 @@ def add_item(request):
         item = Item(title=title, description=description, owner=request.user.userprofile, item_type=item_type)
         item.save()
         return redirect('users_app:list_items')
+
+def add_balance(request):
+    body = json.loads(request.body)
+    print('add balance body',body)
+    amount = int(body['amount'])
+    userprofile = User.objects.filter(id=request.user.id).select_related('userprofile').first().userprofile
+    res = userprofile.add_balance(amount)
+    if res:
+        return success(user_profile_serializer(userprofile), 'data')
+    else:
+        return error('Could not update balance')
+
+def change_password(request):
+    body = json.loads(request.body)
+    print('change password body',body)
+    old_password = body['old_password']
+    new_password = body['new_password']
+    userprofile = User.objects.filter(id=request.user.id).select_related('userprofile').first().userprofile
+    res = userprofile.change_password(old_password, new_password)
+    if res:
+        return success({}, 'data')
+    else:
+        return error('')

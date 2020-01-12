@@ -4,6 +4,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.db import transaction
 
+
 # Create your models here.
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -24,11 +25,11 @@ class UserProfile(models.Model):
     def add_balance(self,amount):
         new_balance = self.balance + amount
         if new_balance < 0:
-            print('You cannot withdraw {}'.format(amount))
+            return 0
         else:
-            print('NEW BALANCE {}'.format(new_balance))
             self.balance = new_balance
             self.save()
+            return 1
 
     def buy(self,item,item_type,price):
         if price > self.balance+self.reserved:
@@ -39,6 +40,14 @@ class UserProfile(models.Model):
             item.save()
             #self.owned_items[item_type].append(item.id)
             #self.financial_report['expenses'].append((item.id, price))
+    
+    def change_password(self, old_password, new_password):
+        if self.user.check_password(old_password) == True:
+            self.user.set_password(new_password)
+            self.user.save()
+            return 1
+        else:
+            return 0
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

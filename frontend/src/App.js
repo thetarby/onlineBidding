@@ -125,7 +125,7 @@ class App extends React.Component {
                         <Link className={'nav-button'} id={"list-button"} onClick={(e)=>this.clickHandler(e)} to="/list-items">List My Items</Link>
                         <Link className={'nav-button'} id={"message-button"} onClick={(e)=>this.clickHandler(e)} to="/messages"><i style={{fontSize:"20px", color:this.state.isMessage ? "red":"gold"}} className={"fa fa-bell"}></i></Link>
 
-                        <Link className={'nav-button'} id={"logout-button"} onClick={(e)=>this.clickHandler(e)} style={{float:"right"}} to="/profile">Logout</Link>
+                        <a className={'nav-button'} id={"logout-button"} href='/logout' style={{float:"right"}}>Logout</a>
                         <Link className={'nav-button'} id={"admin-button"} onClick={(e)=>this.clickHandler(e)} style={{float:"right"}} to="/profile">Admin</Link>
                     </div>
                     <Route path = "/bid" component ={Bid}></Route>

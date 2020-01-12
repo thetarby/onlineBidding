@@ -3,8 +3,12 @@ import json
 #serializers
 def user_profile_serializer(item):
     r = {}
-    for i in ['balance','reserved','name_surname']:
-        r[i] = getattr(item,i)
+    i=0
+    atts = ['balance','reserved','name_surname', 'email']
+    while i < len(atts)-1:
+        r[atts[i]] = getattr(item, atts[i])
+        i += 1
+    r[atts[i]] = getattr(item.user, atts[i])
     return r
 def item_serializer(item):
     r = {}

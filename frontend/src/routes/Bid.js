@@ -112,7 +112,6 @@ export default class Bid extends React.Component {
         }
         else if(e.target.className==='fa fa-bell'){
             this.watchItem(e.currentTarget.id)
-            console.log('dasdjkas')
         }
         else{
             this.setState({selected_item_id:e.currentTarget.id})
