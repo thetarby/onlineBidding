@@ -32,6 +32,25 @@ export default class MyProfile extends React.Component {
                 "balance": json.data.balance
             })
         })
+
+        var request = new Request(
+            'http://localhost:8000/bid/user-history/',
+            {headers: {'X-CSRFToken': this.getCookie('csrftoken')}}
+        );
+        var data = {
+            csrfmiddlewaretoken:this.getCookie('csrftoken')
+        };
+        var thisOfClass=this;
+        fetch(request, {
+            method: 'POST',
+            mode: 'same-origin',  // Do not send CSRF token to another domain.
+            body: JSON.stringify(data)
+        }).then(function(response) {
+            return (response.json())
+        }).then(function(json){
+            console.log('!!!!!!!!!!! history',json)
+            thisOfClass.setState({hist:json.data})
+        })
     }
 
     addBalance(){
@@ -57,35 +76,11 @@ export default class MyProfile extends React.Component {
                     "name_surname": json.data.name_surname, 
                     "email": json.data.email,
                     "balance": json.data.balance
-<<<<<<< HEAD
                 })
             }
                 
         });
-=======
-            })
-        })
 
-
-
-        var request = new Request(
-            'http://localhost:8000/bid/user-history/',
-            {headers: {'X-CSRFToken': this.getCookie('csrftoken')}}
-        );
-        var data = {
-            csrfmiddlewaretoken:this.getCookie('csrftoken')
-        };
-        var thisOfClass=this;
-        fetch(request, {
-            method: 'POST',
-            mode: 'same-origin',  // Do not send CSRF token to another domain.
-            body: JSON.stringify(data)
-        }).then(function(response) {
-            return (response.json())
-        }).then(function(json){
-            console.log('!!!!!!!!!!! history',json)
-            thisOfClass.setState({hist:json.data})
-        })
     }
     watchItemType(){
         var request = new Request(
@@ -97,7 +92,6 @@ export default class MyProfile extends React.Component {
         }).then(function(response) {
             return (response.json())
         })
->>>>>>> f6e6e390bfddd62cb4a7e97cb9a9208d7dbb74d8
     }
 
     changePassword(){
@@ -167,8 +161,8 @@ export default class MyProfile extends React.Component {
                     <p>{this.state.change_password_message}</p>:
                     null
                 }
-
-                <input type={"text"} name={"item_type"} placeholder={"item type to watch"} id={'item-type-watch'}></input>
+                <hr></hr>
+                <input type={"text"} class="form-control" name={"item_type"} placeholder={"item type to watch"} id={'item-type-watch'}></input>
                 <button onClick={this.watchItemType}>Submit</button>
 
                 <p>sold:</p>

@@ -17,12 +17,13 @@ from django.template.loader import render_to_string
 from django.conf import settings
 from django.contrib.auth import login
 from .tokens import account_activation_token
-
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 @ensure_csrf_cookie
 def set_csrf(request):
     return 
-    
+
+@login_required
 def index(request):
     return render(request, "build/index.html")
 
@@ -76,6 +77,7 @@ def user_profile(request):
     print(user_profile_serializer(user))
     return(success(user_profile_serializer(user), 'data'))
 
+@login_required
 def home(request):
     context = {
         'username': request.user.username 
