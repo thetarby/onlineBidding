@@ -32,9 +32,8 @@ class App extends React.Component {
 
         }
 
-        if(e.target.id==='message-button') this.setState({isMessage:0})
+        //if(e.target.id==='message-button') this.setState({isMessage:0})
     }
-
 
     socketConnection(){
         var roomName = "{{ room_name|escapejs }}";
@@ -124,7 +123,7 @@ class App extends React.Component {
                         <Link className={'nav-button'} id={"add-button"} onClick={(e)=>this.clickHandler(e)} to="/add-item">Add Item</Link>
                         <Link className={'nav-button'} id={"profile-button"} onClick={(e)=>this.clickHandler(e)} to="/profile">My Profile</Link>
                         <Link className={'nav-button'} id={"list-button"} onClick={(e)=>this.clickHandler(e)} to="/list-items">List My Items</Link>
-                        <Link className={'nav-button'} id={"message-button"} onClick={(e)=>this.clickHandler(e)} to="/messages"><i style={{fontSize:"20px", color:this.state.isMessage ? "red":"gold"}} className={"fa fa-bell"}></i></Link>
+                        <Link className={'nav-button'} id={"message-button"} onClick={(e)=>{this.setState({isMessage:0});  this.clickHandler(e);}} to="/messages"><i style={{fontSize:"20px", color:this.state.isMessage ? "red":"gold"}} className={"fa fa-bell"}></i></Link>
 
                         <a className={'nav-button'} id={"logout-button"} href='/logout' style={{float:"right"}}>Logout</a>
                         <Link className={'nav-button'} id={"admin-button"} onClick={(e)=>this.clickHandler(e)} style={{float:"right"}} to="/profile">Admin</Link>
