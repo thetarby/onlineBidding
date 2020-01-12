@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import SellItem,SellItemDecrement,SellItemIncrement,Item,Messages,WatchItemTypes,WatchSell
+from .models import SellItem,SellItemDecrement,SellItemIncrement,Item,Messages,WatchItemTypes,WatchSell,BiddedUser
 from django.contrib.auth.models import User
 import json
 from django.core import serializers
@@ -36,13 +36,13 @@ def sell_item(request):
     try:
         if(sell_type=='increment'):
             print("increment")
-            sell=SellItemIncrement(item=item,starting=int(body['starting_price']),state='active',instant_sell=int(body['instant_sell']))
+            sell=SellItemIncrement(sell_owner=request.user.userprofile, item=item,starting=int(body['starting_price']),state='active',instant_sell=int(body['instant_sell']))
         elif(sell_type=='decrement'):
             print("decrement")
-            sell=SellItemDecrement(item=item,starting=int(body['starting_price']),current_price=int(body['starting_price']),state='active',period=int(body['period']),stop_decrement=int(body['stop_decrement']),delta=int(body['delta']))
+            sell=SellItemDecrement(sell_owner=request.user.userprofile, item=item,starting=int(body['starting_price']),current_price=int(body['starting_price']),state='active',period=int(body['period']),stop_decrement=int(body['stop_decrement']),delta=int(body['delta']))
         elif(sell_type=='instant-increment'):
             print("instant-increment")
-            sell=SellItemInstantIncrement(item=item,starting=int(body['starting_price']),current_price=int(body['instant_sell']),state='active', minbid=int(body['starting_price']))
+            sell=SellItemInstantIncrement(sell_owner=request.user.userprofile, item=item,starting=int(body['starting_price']),current_price=int(body['instant_sell']),state='active', minbid=int(body['starting_price']))
         sell.save()
         sell.start_auction()
     except Exception as e:
@@ -51,9 +51,30 @@ def sell_item(request):
     return(success({}, 'data'))
 
 
-def sell_history(request):
-    pass
+def sell_history(request,sell_id):
+    try:
+        #body=json.loads(request.body)
+        #sell_id=body['sell_id']
+        sell_id=sell_id
+        sell=SellItem.objects.get(id=sell_id)
+        hist=BiddedUser.objects.all().filter(sell=sell)
 
+        return(success({'state':sell.state, 'hist':bidded_user_serializer(hist)}, 'data'))
+    except Exception as e:
+        return(error(str(e))) 
+
+
+def user_history(request):
+    try:
+        owned_sells=SellItem.objects.all().filter(sell_owner=request.user.userprofile, state='sold')
+        won_sells=SellItem.objects.all().filter(highest_payer=request.user.userprofile, state='sold')
+        r={
+            'owned_sells':sell_serializer(owned_sells),
+            'won_sellls':sell_serializer(won_sells)
+        }
+        return(success(r, 'data'))
+    except Exception as e:
+        return(error(str(e))) 
 
 def register_to_watch_item_type(request,type):
     try:
@@ -82,6 +103,7 @@ def messages(request):
         return(success(messages, 'data'))
     except Exception as e:
         return(error(str(e))) 
+
 
 
 #this function not necessary for phase4 but to test phase3 it is neeeded

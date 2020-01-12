@@ -15,12 +15,13 @@ body {
 
 #login-box {
   position: relative;
+  position: relative;
   margin: 5% auto;
-  width: 600px;
+  width: 880px;
   height: 400px;
-  background: #FFF;
+  background: #fff;
   border-radius: 2px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 4px rgba(0,0,0,.4);
 }
 
 .bid_form .left {
@@ -81,8 +82,8 @@ h1 {
 }
 .bid_form .center{
     position: relative;
-    top: 50px;
-    left: 130px;
+    top: 28px;
+    left: 300px;
     box-sizing: border-box;
     padding: 40px;
     width: 300px;
@@ -92,14 +93,11 @@ h1 {
   position: absolute;
   top: 0;
   right: 0;
-  box-sizing: border-box;
-  padding: 40px;
-  width: 300px;
-  height: 400px;
-  background: url('https://goo.gl/YbktSj');
+  background: url(https://goo.gl/YbktSj);
   background-size: cover;
-  background-position: center;
+  background-position: 50%;
   border-radius: 0 2px 2px 0;
+  padding: 40px;
 }
 
 .bid_form .right .loginwith {
