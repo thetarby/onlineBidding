@@ -204,3 +204,21 @@ justify-content:center;
 bottom:0;
 position: absolute;
 }
+.item-image .item-price div{
+  font-size: 12px;
+  border-radius: 5px;
+  background-color: rgba(0,0,0,0.4);
+  color: white;
+  min-width: 50px;
+  text-align: center;
+  transition-duration: 0.5s;
+}
+
+.item-image .item-price div:hover{
+
+  background-color: rgba(0,0,0,0.8);
+
+}
+.card:hover .item-image .item-price div{
+  background-color: rgba(0,0,0,0.8);
+}

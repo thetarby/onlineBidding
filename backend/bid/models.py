@@ -18,11 +18,12 @@ class Item(models.Model):
 
 
 class SellItem(models.Model):
+    sell_owner=models.ForeignKey(UserProfile ,on_delete=models.CASCADE ,null=True, default=None, related_name="sell_owner")
     item=models.ForeignKey(Item ,on_delete=models.CASCADE)
     starting=models.FloatField(default=0)
     current_price=models.FloatField(default=0)
     state=models.CharField(max_length=15, default='inactive')
-    highest_payer=models.ForeignKey(UserProfile, on_delete=models.CASCADE, null=True,default=None)
+    highest_payer=models.ForeignKey(UserProfile, on_delete=models.CASCADE, null=True,default=None, related_name="userprofile")
 
     def sell(self):
         self.item.owner.add_balance(self.current_price)
@@ -53,6 +54,10 @@ class SellItemIncrement(SellItem):
         if user.balance < amount:
             return('Cannot bid that much amount')
         #    self.history_['start_price'] = amount
+        bidded_user = BiddedUser(bidded_user=user, sell=self, bid=amount)
+        bidded_user.save()
+
+
 
         old_user=self.highest_payer
         if(old_user is not None): 
@@ -134,6 +139,7 @@ class SellItemInstantIncrement(SellItem):
         self.save()
         #self.owner.item_sold(self)
 
+
 class SellItemDecrement(SellItem):
     period=models.FloatField(blank=False)
     delta=models.FloatField(blank=False)
@@ -188,6 +194,13 @@ class SellItemDecrement(SellItem):
             return('item is sold or inactive')
         if user.balance < amount:
             return('Cannot bid that much amount')
+        try:
+            bidded_user = BiddedUser.objects.get(bidded_user__id=user.id, sell__id=super(SellItemDecrement, self).id)
+        except:
+            bidded_user = BiddedUser(bidded_user=user, sell=self, bid=amount)
+            bidded_user.save()
+
+
 
         old_user=self.highest_payer
         if(old_user is not None): 
@@ -206,6 +219,7 @@ class SellItemDecrement(SellItem):
         #self.watcher.notify(self)
         self.save()
         return 1
+
 
 class BiddedUser(models.Model):
     bidded_user=models.ForeignKey(UserProfile, on_delete=models.CASCADE)
@@ -231,6 +245,7 @@ class Messages(models.Model):
     user=models.ForeignKey(UserProfile,on_delete=models.CASCADE, null=False,blank=False)
     message=models.TextField()
 
+ 
 
 @receiver(post_save, sender=SellItemIncrement)
 @receiver(post_save, sender=SellItemDecrement)

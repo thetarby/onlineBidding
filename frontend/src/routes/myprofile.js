@@ -3,8 +3,12 @@ export default class MyProfile extends React.Component {
     constructor(props){
         super(props)
         this.state = {}
+<<<<<<< HEAD
         this.addBalance = this.addBalance.bind(this)
         this.changePassword = this.changePassword.bind(this)
+=======
+        this.watchItemType=this.watchItemType.bind(this)
+>>>>>>> f6e6e390bfddd62cb4a7e97cb9a9208d7dbb74d8
     }
 
 
@@ -56,10 +60,47 @@ export default class MyProfile extends React.Component {
                     "name_surname": json.data.name_surname, 
                     "email": json.data.email,
                     "balance": json.data.balance
+<<<<<<< HEAD
                 })
             }
                 
         });
+=======
+            })
+        })
+
+
+
+        var request = new Request(
+            'http://localhost:8000/bid/user-history',
+            {headers: {'X-CSRFToken': this.getCookie('csrftoken')}}
+        );
+        var data = {
+            csrfmiddlewaretoken:this.getCookie('csrftoken')
+        };
+        var thisOfClass=this;
+        fetch(request, {
+            method: 'POST',
+            mode: 'same-origin',  // Do not send CSRF token to another domain.
+            body: JSON.stringify(data)
+        }).then(function(response) {
+            return (response.json())
+        }).then(function(json){
+            console.log(json)
+            
+        })
+    }
+    watchItemType(){
+        var request = new Request(
+            'http://localhost:8000/bid/watch-item-type/'+document.getElementById('item-type-watch').value
+        );
+        var thisOfClass=this;
+        fetch(request, {
+            method: 'GET',
+        }).then(function(response) {
+            return (response.json())
+        })
+>>>>>>> f6e6e390bfddd62cb4a7e97cb9a9208d7dbb74d8
     }
 
     changePassword(){
@@ -129,6 +170,9 @@ export default class MyProfile extends React.Component {
                     <p>{this.state.change_password_message}</p>:
                     null
                 }
+
+                <input type={"text"} name={"item_type"} placeholder={"item type to watch"} id={'item-type-watch'}></input>
+                <button onClick={this.watchItemType}>Submit</button>
             </div>
 			);
 	}

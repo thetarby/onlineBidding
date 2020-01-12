@@ -1,6 +1,15 @@
 from django.http import HttpResponse
 import json
 #serializers
+def bidded_user_serializer(users):
+    r = []
+    for user in users:
+        d={}
+        for i in ['bid']:
+            d[i] = getattr(user,i)
+        d['user'] = user_profile_serializer(user.bidded_user)
+        r.append(d)
+    return r
 def user_profile_serializer(item):
     r = {}
     i=0
