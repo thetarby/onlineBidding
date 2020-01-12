@@ -33,7 +33,7 @@ export default class MyProfile extends React.Component {
 
 
         var request = new Request(
-            'http://localhost:8000/bid/user-history',
+            'http://localhost:8000/bid/user-history/',
             {headers: {'X-CSRFToken': this.getCookie('csrftoken')}}
         );
         var data = {
@@ -47,8 +47,8 @@ export default class MyProfile extends React.Component {
         }).then(function(response) {
             return (response.json())
         }).then(function(json){
-            console.log(json)
-            
+            console.log('!!!!!!!!!!! history',json)
+            thisOfClass.setState({hist:json.data})
         })
     }
     watchItemType(){
@@ -85,6 +85,17 @@ export default class MyProfile extends React.Component {
 
                 <input type={"text"} name={"item_type"} placeholder={"item type to watch"} id={'item-type-watch'}></input>
                 <button onClick={this.watchItemType}>Submit</button>
+
+                <p>sold:</p>
+                
+                {
+                    this.state.hist ? this.state.hist.owned_sells.map(d=> <div style={{background:'red', margin:'20px', padding:'10px;'}}><p>item: {d.item.title}</p><p>sold price: {d.current_price}</p></div> ) : ""
+                }
+
+                <p>won:</p>
+                {
+                    this.state.hist ? this.state.hist.won_sellls.map(d=>  <div style={{background:'red', margin:'20px', padding:'10px;'}}><p>item: {d.item.title}</p><p>paid price: {d.current_price}</p></div> ) : ""
+                }
             </div>
 			);
 	}

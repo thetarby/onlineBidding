@@ -43,7 +43,8 @@ export default class Bid extends React.Component {
 
     componentWillMount(){
         this.getData()
-        let counter = setInterval(this.getData, 1000);
+        console.log('compenent will mount')
+        this.counter = setInterval(this.getData, 1000);
 
     }
 
@@ -105,6 +106,10 @@ export default class Bid extends React.Component {
         }).then(function(json){
             console.log(json)
         })
+    }
+    componentWillUnmount() {
+        console.log('component will unmount')
+        clearInterval(this.counter);
     }
     sendBidReq(){
         var request = new Request(
